@@ -413,7 +413,7 @@ function burst() {
       fr.push({
         offset: t,
         opacity: t < .1 ? t * 10 : t > .72 ? (1 - t) / .28 : 1,
-        transform: `translate(${x0 + dx * e + sw * Math.sin(a) * Math.min(1, t * 3)}px,${-rise * e + fall * t * t}px) rotate(${k === 1 ? Math.cos(a) * 22 : k === 0 ? Math.sin(a) * 10 : spin * t}deg) scale(${Math.min(1, .2 + t * 4) * (t > .7 ? 1 - .25 * (t - .7) / .3 : 1)})`
+        transform: `translate(${x0 + dx * e + sw * Math.sin(a) * Math.min(1, t * 3)}px,${-rise * e + fall * t * t}px) rotate(${k === 1 ? Math.cos(a) * 22 : k === 0 ? Math.sin(a) * 10 : spin * t}deg)`
       });
     }
 
@@ -441,6 +441,7 @@ const tapEnv = () => {
 };
 
 drag(ew, tapEnv);
+ew
 ew.addEventListener('keydown', e => {
   if (e.key === 'Enter' || e.key === ' ') {
     e.preventDefault();
@@ -498,7 +499,7 @@ $('#grid').onclick = e => {
         src = p.src || PHOTO_FOLDER + k + '.jpg',
         [y, m, d] = k.split('-'),
         lbl = `${MN[m - 1]} ${+d}, ${y}`;
-  show(`<div class="pc"><div class="ph"><span>📷 Photo for<br>${lbl}<br><small>${src}</small></span><img src="${src}" alt="Photo from ${lbl}" onerror="this.remove()"></div><p class="cap">${p.note || lbl}</p></div>`);
+  show(`<div class="pc"><div class="ph"><span>📷 Photo for<br>${lbl}<br><small>${src}</small></span><img src="${src}" alt="Photo from ${lbl}" onerror="this.remove()"></div><p class="cap">${p.note || 'A memory from this day.'}</p></div>`);
 };
 
 draw();
@@ -554,7 +555,7 @@ tripMap.onclick = e => {
   if (!b) return;
   const i = +b.dataset.i,
         p = PLACES[i];
-  show(`<div class="pc place"><div class="ph"><span><i class="big">${p.emoji || '📍'}</i>${p.photo ? '' : '<br><small>Add a photo in js/script.js</small>'}</span>${p.photo ? `<img src="${p.photo}" alt="${p.name}" onerror="this.remove()">` : ''}</div><p class="cap">${p.name}</p><p class="pdate">${p.next ? 'Next stop' : 'Stop ' + (i + 1)}${p.date ? ' · ' + p.date : ''}</p>${p.note ? `<p class="pnote">${p.note}</p>` : ''}</div>`);
+  show(`<div class="pc place"><div class="ph"><span><i class="big">${p.emoji || '📍'}</i>${p.photo ? '' : '<br><small>Add a photo in js/script.js</small>'}</span>${p.photo ? `<img src="${p.photo}" alt="${p.name}" onerror="this.remove()">` : ''}</div><p class="cap">${p.note || 'A memory from this place.'}</p></div>`);
 };
 
 renderTrip();
@@ -573,7 +574,7 @@ addEventListener('resize', () => { clearTimeout(tripTimer); tripTimer = setTimeo
 
 
 /* ---------- instagram card when the mouse is over an avatar ---------- */
-const IGLOGO = `<svg class="ig-logo" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16.8" cy="7.2" r="1.1" fill="currentColor"/></svg>`;
+const IGLOGO = `<svg class="ig-logo" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.6" fill="currentColor"/><path d="M7.3 3.8h9.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
 
 document.querySelectorAll('.who[data-ig]').forEach(who => {
   const p = INSTAGRAM[who.dataset.ig];
@@ -619,21 +620,17 @@ const CATG = `<g class="tail"><path d="M20 60Q2 58 8 38" fill="none" style="stro
 const at = (x, y, s, r, g) => `<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})">${g}</g>`;
 
 const BC = `<g class="cat bgc" style="--c:#fff;--p:#e6dcf7">${CATG}</g>`;
-const BOW = `<path d="M0 0C-8-9-20-8-19 1-18 9-8 6 0 1 8 6 18 9 19 1 20-8 8-9 0 0ZM-1 2L-8 14M1 2L8 14" fill="#f1eafc" stroke="#bfaae8" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/><circle cy="1" r="2.8" fill="#d9ccf4" stroke="#bfaae8" stroke-width="1.2"/>`;
+const BOW = `<path d="M0 0C-8-9-20-8-19 1-18 9-8 6 0 1 8 6 18 9 19 1 20-8 8-9 0 0ZM-1 2L-8 14M1 2L8 14" fill="#f1eafc" stroke="#bfaae8" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>`;
 const STAR = `<path d="M0-8L2.4-2.6 8-2.4 3.6 1.2 5 7 0 3.6-5 7-3.6 1.2-8-2.4-2.4-2.6Z" fill="#fff" stroke="#cdbdf0" stroke-linejoin="round"/>`;
 
 document.body.insertAdjacentHTML('afterbegin',
   `<svg class="bg" aria-hidden="true"><defs><pattern id="pt" width="300" height="340" patternUnits="userSpaceOnUse">` +
-  // small background cats
   at(24, 50, .55, 0, BC) + at(236, 196, '-.5 .5', 0, BC) + at(34, 268, .45, 0, BC) +
-  // bows
   at(170, 50, 1, -12, BOW) + at(60, 178, 1, 14, BOW) + at(236, 300, .9, -8, BOW) + at(130, 250, .8, 10, BOW) +
-  // stars
   at(250, 40, 1, 0, STAR) + at(128, 122, .9, 10, STAR) + at(276, 130, 1.2, 0, STAR) +
   at(16, 226, .8, 0, STAR) + at(160, 176, 1.6, 0, STAR) + at(118, 322, .8, 0, STAR) +
-  // dots
-  `<g fill="#d9cdf4"><circle cx="112" cy="26" r="4"/><circle cx="276" cy="88" r="3"/><circle cx="14" cy="130" r="5"/><circle cx="206" cy="120" r="3.5"/><circle cx="90" cy="214" r="3"/><circle cx="270" cy="262" r="4.5"/><circle cx="190" cy="318" r="3"/></g></pattern></defs><rect width="100%" height="100%" fill="url(#pt)"/></svg>`
-);
+  `<g fill="#d9cdf4"><circle cx="112" cy="26" r="4"/><circle cx="276" cy="88" r="3"/><circle cx="14" cy="130" r="5"/><circle cx="206" cy="120" r="3.5"/><circle cx="90" cy="214" r="3"/><circle cx="110" cy="300" r="2.8"/></g>` +
+  `</pattern></defs><rect width="100%" height="100%" fill="url(#pt)"/></svg>`);
 
 
 /* ---------- cat stickers: a fixed, wobbling layer scattered over the whole background ---------- */
@@ -653,8 +650,14 @@ const pics = STICKER_FILES.map((file, i) => {
   im.style.setProperty('--d', (3.2 + i % 4 * .45) + 's');
   im.style.setProperty('--l', (-i * .53) + 's');
   im.style.setProperty('--r', (rnd(i + 5) * 16 - 8) + 'deg');
-  im.onerror = () => { if (tried++) { im.remove(); scatter(); } else im.src = 'stickers/' + file.replace(/\.\w+$/, '.jpg'); };
-  im.src = 'stickers/' + file;
+  im.onerror = () => {
+    if (tried++) { im.remove(); scatter(); }
+    else {
+      tried++;
+      im.src = 'stickers/' + file;
+    }
+  };
+  im.src = file;
   stk.append(im);
   return im;
 });
@@ -718,7 +721,7 @@ function startConfetti() {
   for (let i = 0; i < 46; i++) {
     const c = document.createElement('i');
     c.textContent = E[i % E.length];
-    c.style.cssText = `left:${Math.random() * 100}%; font-size:${14 + Math.random() * 16}px; animation-duration:${3.5 + Math.random() * 3}s; animation-delay:${Math.random() * 3}s; --sway:${(Math.random() - .5) * 120}px; --spin:${(Math.random() - .5) * 720}deg`;
+    c.style.cssText = `left:${Math.random() * 100}%; font-size:${14 + Math.random() * 16}px; animation-duration:${3.5 + Math.random() * 3}s; animation-delay:${Math.random() * 3}s; --sway:${(Math.random() - .5) * 40}deg; --drift:${-20 + Math.random() * 40}px;`;
     confetti.append(c);
   }
   document.body.append(confetti);
@@ -730,7 +733,7 @@ function celebrate(c) {
         unit = anniv ? 'year' : 'month',
         name = anniv ? 'anniversary' : 'monthsary';
 
-  let k = 0;                                           // letters bounce one after another, words never split
+  let k = 0;
   const words = title.split(' ').map(w => `<span class="word">${[...w].map(ch => `<span style="--i:${k++}">${ch}</span>`).join('')}</span>`).join(' ');
 
   show(`
@@ -746,7 +749,7 @@ function celebrate(c) {
 }
 
 function checkCelebration() {
-  const demo = new URLSearchParams(location.search).get('celebrate');      // index.html?celebrate=anniversary
+  const demo = new URLSearchParams(location.search).get('celebrate');
   const c = demo
     ? { type: demo === 'anniversary' ? 'anniversary' : 'monthsary', n: demo === 'anniversary' ? 1 : 3 }
     : celebration(today);
