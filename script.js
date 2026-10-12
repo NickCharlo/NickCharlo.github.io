@@ -19,27 +19,21 @@ const $ = s => document.querySelector(s);
 //      cover = album picture (optional)   title / artist = what the player shows
 //    Delete the lines you don't need, copy a line to add more songs.
 const TRACKS = [
-  { title: "Enchanted",          artist: "Taylor Swift", url: "music/Taylor Swift - Enchanted (Taylor's Version) (Lyric Video).mp3", cover: "music/enchanted.png" },
-  { title: "Iris",   artist: " Goo Goo Dolls",   url: "music/Iris.mp3", cover: "music/iriscover.png" },
-  { title: "Mine", artist: "Taylor Swift",   url: "music/Taylor Swift - Mine.mp3", cover: "music/enchanted.png" },
-   { title: "Neighbourhood", artist: "Taylor Swift",   url: "music/Reflections.mp3", cover: "music/neighbourhood.png" },
-    { title: "Everything I Do", artist: "Bryan Adams",   url: "music/Everything I do.mp3", cover: "music/bryan adams.png" },
-    { title: "The Way I Loved You", artist: "Taylor Swift",   url: "music/Taylor Swift - The Way I Loved You (Taylor's Version) (Lyric Video).mp3", cover: "music/enchanted.png" }
+  { title: "Our Song",          artist: "Aurish & Nick", url: "", cover: "music/cover1.jpg" },
+  { title: "Song number two",   artist: "Artist name",   url: "", cover: "music/cover2.jpg" },
+  { title: "Song number three", artist: "Artist name",   url: "", cover: "music/cover3.jpg" }
 ];
 
 // 2) PHOTOS -----------------------------------------------------------
 //    Every calendar day automatically looks for  photos/YYYY-MM-DD.jpg
 //    (example: photos/2025-10-13.jpg). Just drop the picture in the "photos" folder.
-//    Add a line below if you want a caption on that day (its heart also turns
-//    bright pink) or if the picture has a different file name.
+//    Days with a picture glow by themselves and the album counts them. Add a line below
+//    if you want a caption on that day or if the picture has a different file name.
 const PHOTO_FOLDER = "photos/";
 const PHOTOS = {
-  "2024-10-04": { src: "photos/2024-10-04.jpg", note: "When we were complete strangers" },
-   "2025-09-29": { src: "photos/2025-09-29.jpg", note: "School science fair awarding" },
-  "2025-10-02": { src: "photos/2025-10-02.jpg", note: "First lunch together" },
-  "2025-10-14": { src: "photos/2025-10-14.jpg", note: "First hug" },
-   "2025-10-09": { src: "photos/2025-10-09.jpg", note: "During division science fair" },
-   "2025-10-08": { src: "photos/2025-10-08.jpg", note: "Became slightly clingy" },
+  "2025-10-13": { src: "photos/2025-10-13.jpg", note: "The day it all began 💜" },
+  // "2025-11-02": { src: "photos/first-trip.jpg", note: "Our first trip" },
+  // "2025-12-25": { src: "photos/christmas.jpg",  note: "Our first Christmas" },
 };
 
 // 3) LETTER -----------------------------------------------------------
@@ -59,8 +53,8 @@ const LETTER = {
 //    user = Instagram username without the @   (leave "" to hide the card)
 //    posts / followers / following are optional - leave "" to hide them.
 const INSTAGRAM = {
-  aurish: { user: "mixed_in_the_stars02", name: "mixed_in_the_stars02", bio: "Cutie pie ✨", posts: "", followers: "", following: "" },
-  nick:   { user: "Nick Charlo",   name: "Nick Charlo",   bio: "Hey ✨", posts: "", followers: "", following: "" }
+  aurish: { user: "aurish", name: "Aurish", bio: "Your bio here ✨", posts: "", followers: "", following: "" },
+  nick:   { user: "nick",   name: "Nick",   bio: "Your bio here ✨", posts: "", followers: "", following: "" }
 };
 
 // 5) STICKERS ---------------------------------------------------------
@@ -85,7 +79,11 @@ const CELEBRATE = {
   sticker: "2.png"                 // a picture from the stickers folder shown on the popup ("" = none)
 };
 
-brationlet today, days;
+/* ===================================================================== */
+
+
+/* ---------- today + days counter (updates by itself after midnight) ---------- */
+let today, days;
 
 function refreshToday() {
   const t = new Date();
