@@ -21,7 +21,7 @@ const $ = s => document.querySelector(s);
 const TRACKS = [
   { title: "Enchanted",          artist: "Taylor Swift", url: "music/Taylor Swift - Enchanted (Taylor's Version) (Lyric Video).mp3", cover: "music/enchanted.png" },
   { title: "Iris",   artist: " Goo Goo Dolls",   url: "music/Iris.mp3", cover: "music/iriscover.png" },
-  { title: "Song number three", artist: "Artist name",   url: "", cover: "music/cover3.jpg" }
+  { title: "Mine", artist: "Taylor Swift",   url: "music/Taylor Swift - Mine.mp3", cover: "music/cover3.jpg" }
 ];
 
 // 2) PHOTOS -----------------------------------------------------------
