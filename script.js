@@ -1,6 +1,5 @@
 // =====================================================================
 //   Aurish & Nick  -  js/script.js
-//   Everything you may want to change is inside the "EDIT ME" block.
 // =====================================================================
 
 const START = new Date(2025, 9, 13);   // anniversary 10/13/2025  (months start at 0, so 9 = October)
@@ -10,6 +9,31 @@ const $ = s => document.querySelector(s);
 document.addEventListener('dblclick', e => {
   e.preventDefault();
 }, { passive: false });
+
+/* ---------- Theme Switcher ---------- */
+const themes = ['', 'peach', 'midnight'];
+const themeNames = ['Lavender', 'Peach', 'Midnight'];
+const themeBtn = $('#themeToggle');
+
+let currentThemeIndex = localStorage.getItem('site_theme_idx') ? parseInt(localStorage.getItem('site_theme_idx')) : 0;
+
+function applyTheme(idx) {
+  currentThemeIndex = idx;
+  const theme = themes[idx];
+  if (theme) {
+    document.body.setAttribute('data-theme', theme);
+  } else {
+    document.body.removeAttribute('data-theme');
+  }
+  localStorage.setItem('site_theme_idx', idx);
+}
+
+applyTheme(currentThemeIndex);
+
+themeBtn.onclick = () => {
+  currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+  applyTheme(currentThemeIndex);
+};
 
 
 /* =====================================================================
@@ -46,19 +70,12 @@ const INSTAGRAM = {
   nick:   { user: "nick",   name: "Nick",   bio: "Your bio here ✨", posts: "", followers: "", following: "" }
 };
 
-// 5) STICKERS ---------------------------------------------------------
-const STICKER_FILES = [
-  "1.png", "2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png",
-  "9.png", "10.png", "11.png", "12.png", "13.png", "14.png", "15.png", "16.png"
-];
-const STICKER_SIZE = { "1.png": 1.5, "2.png": 1.5, "3.png": 1.25, "4.png": .85, "5.png": .75, "6.png": 1.45 };
-
 // 6) CELEBRATION ------------------------------------------------------
 const CELEBRATE = {
   days: 3,
   monthsary: "Happy Monthsary!",
   anniversary: "Happy Anniversary!",
-  sticker: "2.png"
+  sticker: ""
 };
 
 /* ===================================================================== */
@@ -433,7 +450,7 @@ function setCount(c) {
 
 function draw() {
   const g = ++gen;
-  $('#cm').textContent = `${MN[M]} ${Y}`;
+  $('#cm').textContent = `${MN[M]}${Y}`;
 
   let h = "SMTWTFS".split('').map(x => `<div class="wd">${x}</div>`).join('')
         + '<i></i>'.repeat(new Date(Y, M, 1).getDay());
@@ -486,7 +503,7 @@ $('#grid').onclick = e => {
         p = PHOTOS[k] || {},
         src = p.src || PHOTO_FOLDER + k + '.jpg',
         [y, m, d] = k.split('-'),
-        lbl = `${MN[m - 1]} ${+d}, ${y}`;
+        lbl = `${MN[m - 1]} ${+d},${y}`;
   show(`<div class="pc"><div class="ph"><span>📷 Photo for<br>${lbl}<br><small>${src}</small></span><img src="${src}" alt="Photo from ${lbl}" onerror="this.remove()"></div><p class="cap">${p.note || lbl}</p></div>`);
 };
 
@@ -507,8 +524,7 @@ document.querySelectorAll('.who[data-ig]').forEach(who => {
     <div class="ig">
       <div class="ig-head">
         <span class="ig-ring"><span class="ig-pic">${p.name[0]}${img ? `<img src="${img.getAttribute('src')}" alt="" onerror="this.remove()">` : ''}</span></span>
-        <div class="ig-id"><b>@${p.user}</b><small>${p.name}</small></div>
-        ${IGLOGO}
+        <div class="ig-id"><b>@${p.user}</b><small>${p.name}</small></div>${IGLOGO}
       </div>
       ${stats.length ? `<div class="ig-stats">${stats.map(s => `<span><b>${s[1]}</b>${s[0]}</span>`).join('')}</div>` : ''}
       ${p.bio ? `<p>${p.bio}</p>` : ''}
@@ -552,78 +568,6 @@ if (matchMedia('(hover:none)').matches) {
 }
 
 
-/* ---------- Wallpaper (Heart shape replacing tiny background cat) ---------- */
-const BG_HEART = `<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#fff" stroke="#c3b2ea" stroke-width="2" stroke-linejoin="round"/>`;
-
-const at = (x, y, s, r, g) => `<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})">${g}</g>`;
-
-const BC = `<g>${BG_HEART}</g>`;
-const BOW = `<path d="M0 0C-8-9-20-8-19 1-18 9-8 6 0 1 8 6 18 9 19 1 20-8 8-9 0 0ZM-1 2L-8 14M1 2L8 14" fill="#f1eafc" stroke="#bfaae8" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/><circle cy="1" r="2.8" fill="#d9ccf4" stroke="#bfaae8" stroke-width="1.2"/>`;
-const STAR = `<path d="M0-8L2.4-2.6 8-2.4 3.6 1.2 5 7 0 3.6-5 7-3.6 1.2-8-2.4-2.4-2.6Z" fill="#fff" stroke="#cdbdf0" stroke-linejoin="round"/>`;
-
-document.body.insertAdjacentHTML('afterbegin',
-  `<svg class="bg" aria-hidden="true"><defs><pattern id="pt" width="300" height="340" patternUnits="userSpaceOnUse">` +
-  // background hearts (replaced tiny cats)
-  at(24, 50, .8, 0, BC) + at(236, 196, .7, 0, BC) + at(34, 268, .75, 0, BC) +
-  // bows
-  at(170, 50, 1, -12, BOW) + at(60, 178, 1, 14, BOW) + at(236, 300, .9, -8, BOW) + at(130, 250, .8, 10, BOW) +
-  // stars
-  at(250, 40, 1, 0, STAR) + at(128, 122, .9, 10, STAR) + at(276, 130, 1.2, 0, STAR) +
-  at(16, 226, .8, 0, STAR) + at(160, 176, 1.6, 0, STAR) + at(118, 322, .8, 0, STAR) +
-  // dots
-  `<g fill="#d9cdf4"><circle cx="112" cy="26" r="4"/><circle cx="276" cy="88" r="3"/><circle cx="14" cy="130" r="5"/><circle cx="206" cy="120" r="3.5"/><circle cx="90" cy="214" r="3"/><circle cx="270" cy="262" r="4.5"/><circle cx="190" cy="318" r="3"/></g></pattern></defs><rect width="100%" height="100%" fill="url(#pt)"/></svg>`
-);
-
-
-/* ---------- cat stickers (Stay still - wobble removed) ---------- */
-const stk = document.createElement('div');
-stk.id = 'stk';
-stk.setAttribute('aria-hidden', 'true');
-document.body.append(stk);
-
-const rnd = n => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
-
-const pics = STICKER_FILES.map((file, i) => {
-  const im = new Image();
-  let tried = 0;
-  im.className = 'st';
-  im.alt = '';
-  im.style.setProperty('--r', (rnd(i + 5) * 16 - 8) + 'deg');
-  im.onerror = () => { if (tried++) { im.remove(); scatter(); } else im.src = 'stickers/' + file.replace(/\.\w+$/, '.jpg'); };
-  im.src = 'stickers/' + file;
-  stk.append(im);
-  return im;
-});
-
-function scatter() {
-  const W = innerWidth,
-        H = innerHeight,
-        phone = W < 760,
-        ok = pics.filter(im => im.isConnected),
-        n = phone ? Math.ceil(ok.length * .6) : ok.length,
-        cols = Math.max(2, Math.round(Math.sqrt(n * W / H))),
-        rows = Math.ceil(n / cols),
-        cw = W / cols,
-        ch = H / rows,
-        cells = [...Array(cols * rows).keys()].sort((a, b) => rnd(a * 3 + 1) - rnd(b * 3 + 1)).slice(0, n);
-
-  ok.forEach((im, i) => {
-    im.style.display = i < n ? '' : 'none';
-    if (i >= n) return;
-    const cell = cells[i],
-          cx = (cell % cols + .5 + (rnd(i * 2 + 1) - .5) * .5) * cw,
-          cy = (Math.floor(cell / cols) + .5 + (rnd(i * 2 + 2) - .5) * .5) * ch,
-          scale = STICKER_SIZE[STICKER_FILES[pics.indexOf(im)]] || 1;
-    im.style.left = cx + 'px';
-    im.style.top = cy + 'px';
-    im.style.setProperty('--w', Math.max(56, Math.min(230, Math.min(cw, ch) * .8 * scale)) + 'px');
-    im.style.opacity = !phone && Math.abs(cx - W / 2) < 250 ? .5 : .95;
-  });
-}
-scatter();
-addEventListener('resize', scatter);
-
-
 /* ---------- monthsary / anniversary popup ---------- */
 const ord = n => { const s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
 
@@ -651,51 +595,4 @@ function startConfetti() {
   for (let i = 0; i < 46; i++) {
     const c = document.createElement('i');
     c.textContent = E[i % E.length];
-    c.style.cssText = `left:${Math.random() * 100}%; font-size:${14 + Math.random() * 16}px; animation-duration:${3.5 + Math.random() * 3}s; animation-delay:${Math.random() * 3}s; --sway:${(Math.random() - .5) * 120}px; --spin:${(Math.random() - .5) * 720}deg`;
-    confetti.append(c);
-  }
-  document.body.append(confetti);
-}
-
-function celebrate(c) {
-  const anniv = c.type === 'anniversary',
-        title = anniv ? CELEBRATE.anniversary : CELEBRATE.monthsary,
-        unit = anniv ? 'year' : 'month',
-        name = anniv ? 'anniversary' : 'monthsary';
-
-  let k = 0;
-  const words = title.split(' ').map(w => `<span class="word">${[...w].map(ch => `<span style="--i:${k++}">${ch}</span>`).join('')}</span>`).join(' ');
-
-  show(`
-    <div class="party">
-      ${CELEBRATE.sticker ? `<img class="party-cat" src="stickers/${CELEBRATE.sticker}" alt="" onerror="this.remove()">` : ''}
-      <div class="party-ribbon">${ord(c.n)} ${name}</div>
-      <h2>${words}</h2>
-      <p>${c.n} ${unit}${c.n > 1 ? 's' : ''} of loving each other</p>
-      <div class="party-hearts"><i>💗</i><i>💖</i><i>💗</i></div>
-      <small>Aurish &amp; Nick · ${days} days together</small>
-    </div>`, stopConfetti);
-  startConfetti();
-}
-
-function checkCelebration() {
-  const demo = new URLSearchParams(location.search).get('celebrate');
-  const c = demo
-    ? { type: demo === 'anniversary' ? 'anniversary' : 'monthsary', n: demo === 'anniversary' ? 1 : 3 }
-    : celebration(today);
-  if (c) celebrate(c);
-}
-setTimeout(checkCelebration, 900);
-
-
-/* ---------- midnight refresh ---------- */
-const msToMidnight = () => {
-  const n = new Date();
-  return new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1) - n + 500;
-};
-setTimeout(function midnight() {
-  refreshToday();
-  draw();
-  checkCelebration();
-  setTimeout(midnight, msToMidnight());
-}, msToMidnight());
+    c.style.cssText = `left:${Math.random() * 100}\%; font-size:${14 + Math.random() * 16}px; animation-duration:${3.5 + Math.random() * 3}s; animation-delay:${Math.random() *
