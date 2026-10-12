@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aurish &amp; Nick</title>
+  <meta name="theme-color" content="#f7e9f3">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Quicksand:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Background -->
+  <div class="bg-fixed" aria-hidden="true">
+    <svg class="bg-ribbon ribbon-l" viewBox="0 0 180 900" preserveAspectRatio="none">
+      <defs><linearGradient id="ribA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7c6dc"/><stop offset="1" stop-color="#ddd0f8"/></linearGradient></defs>
+      <path d="M78 -40C140 80 8 150 86 250C156 350 12 430 92 540C160 660 20 760 88 940L18 940C-20 760 96 660 28 540C-36 430 92 350 22 250C-48 150 48 80 16 -40Z" fill="url(#ribA)"/>
+    </svg>
+    <svg class="bg-ribbon ribbon-r" viewBox="0 0 180 900" preserveAspectRatio="none">
+      <path d="M78 -40C140 80 8 150 86 250C156 350 12 430 92 540C160 660 20 760 88 940L18 940C-20 760 96 660 28 540C-36 430 92 350 22 250C-48 150 48 80 16 -40Z" fill="url(#ribA)"/>
+    </svg>
+    <i data-icon="heart" data-cls="floater soft drift f1" data-sw="1.4"></i>
+    <i data-icon="sparkles" data-cls="floater lav f2" data-sw="1.4"></i>
+    <i data-icon="ribbon" data-cls="floater drift f3" data-sw="1.4"></i>
+    <i data-icon="heart" data-cls="floater lav drift f4" data-sw="1.3"></i>
+    <i data-icon="heart" data-cls="floater soft f5" data-sw="1.4"></i>
+    <i data-icon="ribbon" data-cls="floater lav drift f6" data-sw="1.4"></i>
+    <i data-icon="heart" data-cls="floater f7" data-sw="1.6"></i>
+    <i data-icon="sparkles" data-cls="floater soft drift f8" data-sw="1.5"></i>
+  </div>
+
+  <h1 class="sr-only">Aurish and Nick</h1>
+  <main>
+    <!-- Days ring -->
+    <section class="hero" aria-label="Days together">
+      <svg class="ring" viewBox="0 0 240 240" aria-hidden="true">
+        <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4b6d0"/><stop offset="0.52" stop-color="#e7c6ef"/><stop offset="1" stop-color="#c9b6f2"/></linearGradient></defs>
+        <circle class="track" cx="120" cy="120" r="100"/>
+        <circle class="arc" cx="120" cy="120" r="100"/>
+      </svg>
+      <div class="ct"><span>It’s been</span><strong class="num" id="days">0</strong><span>days</span></div>
+    </section>
+    <!-- Aurish + Nick (rendered by script.js) -->
+    <section class="pair" id="pair" aria-label="Aurish and Nick"></section>
+    <p class="since">Together since October 13, 2025</p>
+    <!-- Album calendar (rendered by script.js) -->
+    <section class="album" id="album" aria-label="Photo album"></section>
+  </main>
+
+  <div class="edge" id="edgeL"></div>
+  <div class="edge" id="edgeR"></div>
+
+  <!-- Draggable music player -->
+  <div id="mw" class="wg">
+    <i class="tab" aria-hidden="true"></i>
+    <div class="stage">
+      <div class="art">
+        <i data-icon="music" data-cls="note-ico"></i>
+        <small id="hint"></small>
+        <img id="cv" alt="" hidden>
+        <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      </div>
+      <ol class="list" id="list" hidden data-nodrag></ol>
+      <button type="button" class="lbtn" id="lb" data-nodrag aria-label="Show the playlist" aria-pressed="false"><i data-icon="list-music"></i></button>
+    </div>
+    <div class="meta"><b id="tt"></b><small id="ta"></small></div>
+    <p class="msg" id="msg" hidden></p>
+    <input id="sk" data-nodrag type="range" min="0" max="1000" step="1" value="0" aria-label="Seek">
+    <div class="tm num"><span id="tc">0:00</span><span id="tr">-0:00</span></div>
+    <div class="ctl" data-nodrag>
+      <button type="button" class="sm" id="sh" aria-label="Shuffle" aria-pressed="false" data-nodrag><i data-icon="shuffle"></i></button>
+      <button type="button" id="rw" aria-label="Previous" data-nodrag><i data-icon="skip-back"></i></button>
+      <button type="button" class="play" id="pp" aria-label="Play" data-nodrag><i data-icon="play"></i></button>
+      <button type="button" id="fw" aria-label="Next" data-nodrag><i data-icon="skip-forward"></i></button>
+      <button type="button" class="sm" id="rp" aria-label="Repeat" aria-pressed="false" data-nodrag><i data-icon="repeat"></i></button>
+    </div>
+  </div>
+
+  <!-- Draggable envelope -->
+  <div id="ew" class="wg" role="button" tabindex="0" aria-label="Open the love letter">
+    <i class="tab" aria-hidden="true"></i>
+    <div class="glow"></div>
+    <div class="env" id="env">
+      <div class="back"></div>
+      <div class="paper"><i data-icon="heart"></i></div>
+      <div class="front"><span class="to">To my love</span><span class="stamp"><i data-icon="heart"></i></span></div>
+      <div class="flap"><i class="fo"></i><i class="fi"></i></div>
+      <div class="seal"><i data-icon="heart"></i></div>
+    </div>
+  </div>
+
+  <!-- Popups -->
+  <div id="ov"><div id="box"></div></div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
