@@ -58,8 +58,10 @@ const LETTER = {
 //    user = Instagram username without the @   (leave "" to hide the card)
 //    posts / followers / following are optional - leave "" to hide them.
 const INSTAGRAM = {
-  aurish: { user: "aurish", name: "Aurish", bio: "Your bio here ✨", posts: "", followers: "", following: "" },
-  nick:   { user: "nick",   name: "Nick",   bio: "Your bio here ✨", posts: "", followers: "", following: "" }
+  aurish: { user: "mixed_in_the_stars02
+", name: "mixed_in_the_stars02
+", bio: "Cutie pie ✨", posts: "", followers: "", following: "" },
+  nick:   { user: "Nick Charlo",   name: "Nick Charlo",   bio: "Hey ✨", posts: "", followers: "", following: "" }
 };
 
 // 5) STICKERS ---------------------------------------------------------
