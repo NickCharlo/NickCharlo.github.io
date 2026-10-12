@@ -35,9 +35,10 @@ const TRACKS = [
 const PHOTO_FOLDER = "photos/";
 const PHOTOS = {
   "2024-10-04": { src: "photos/2024-10-04.jpg", note: "When we were complete strangers" },
+   "2025-09-29": { src: "photos/2025-09-29.jpg", note: "School science fair awarding" },
   "2025-10-02": { src: "photos/2025-10-02.jpg", note: "First lunch together" },
   "2025-10-14": { src: "photos/2025-10-14.jpg", note: "First hug" },
-  // "2025-12-25": { src: "photos/christmas.jpg",  note: "Our first Christmas" },
+   "2025-10-09": { src: "photos/2025-10-19.jpg", note: "During division science fair" },
 };
 
 // 3) LETTER -----------------------------------------------------------
