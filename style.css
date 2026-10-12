@@ -1,14 +1,42 @@
 /* ==========================================================
    Aurish & Nick  -  css/style.css
-   Sections: base · days ring · avatars · album calendar · widgets ·
-   music player · envelope · popups · stickers · wallpaper
    ========================================================== */
 :root {
   --rose: #e9a3c0;
   --lav: #d9d0f6;
   --plum: #6a4b8f;
   --ink: #4d3768;
+  --bg-grad: radial-gradient(circle at 18% 8%, #fff, transparent 42%),
+             radial-gradient(circle at 88% 55%, #fff, transparent 40%),
+             radial-gradient(#d3c4f0 .9px, transparent 1.4px) 0 0/8px 8px,
+             #efe7fb;
+  --card-bg: #ffffffd9;
 }
+
+/* Theme 2: Peach Dream */
+body[data-theme="peach"] {
+  --rose: #e07a5f;
+  --lav: #f4f1de;
+  --plum: #81b29a;
+  --ink: #3d405b;
+  --bg-grad: radial-gradient(circle at 20% 10%, #fff, transparent 45%),
+             radial-gradient(#f4a261 .9px, transparent 1.4px) 0 0/8px 8px,
+             #fdf0ed;
+  --card-bg: #ffffffeb;
+}
+
+/* Theme 3: Midnight Romance */
+body[data-theme="midnight"] {
+  --rose: #ff8fab;
+  --lav: #b5838d;
+  --plum: #c77dff;
+  --ink: #f8f9fa;
+  --bg-grad: radial-gradient(circle at 15% 15%, #240046, transparent 50%),
+             radial-gradient(rgba(255,255,255,0.1) .9px, transparent 1.4px) 0 0/8px 8px,
+             #10002b;
+  --card-bg: #240046e6;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -21,11 +49,8 @@ body {
   overflow-x: hidden;
   touch-action: manipulation;
   -webkit-text-size-adjust: 100%;
-  background:
-    radial-gradient(circle at 18% 8%, #fff, transparent 42%),
-    radial-gradient(circle at 88% 55%, #fff, transparent 40%),
-    radial-gradient(#d3c4f0 .9px, transparent 1.4px) 0 0/8px 8px,
-    #efe7fb;
+  background: var(--bg-grad);
+  background-attachment: fixed;
 }
 main {
   max-width: 440px;
@@ -33,8 +58,30 @@ main {
   padding: 30px 20px;
 }
 
+/* Theme Switcher Floating Button */
+.theme-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--rose);
+  background: var(--card-bg);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform .2s ease, background .2s ease;
+}
+.theme-btn:hover {
+  transform: scale(1.1);
+}
+
 /* ==========================================================
-   HERO RING  (days counter)
+   HERO RING
    ========================================================== */
 .hero {
   position: relative;
@@ -67,7 +114,7 @@ main {
   place-content: center;
   text-align: center;
   gap: 8px;
-  color: #c0658b;
+  color: var(--rose);
 }
 .ct strong {
   font-size: 3.6rem;
@@ -76,7 +123,7 @@ main {
 }
 
 /* ==========================================================
-   AVATARS + HEART
+   AVATARS + INSTAGRAM CARD
    ========================================================== */
 .pair {
   display: flex;
@@ -88,9 +135,9 @@ main {
 .who {
   position: relative;
   text-align: center;
-  color: #a8648a;
+  color: var(--rose);
   font-weight: 600;
-  text-shadow: 0 0 8px #fff, 0 0 3px #fff;
+  text-shadow: 0 0 8px var(--card-bg), 0 0 3px var(--card-bg);
 }
 .av {
   position: relative;
@@ -111,7 +158,7 @@ main {
 }
 .who:hover .av {
   transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 0 0 3px #fff, 0 0 0 5px #f08bb0, 0 12px 26px #d9a6c066;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--rose), 0 12px 26px #d9a6c066;
 }
 .av img {
   position: absolute;
@@ -122,7 +169,7 @@ main {
 }
 .beat {
   font-size: 2.3rem;
-  color: #f0679b;
+  color: var(--rose);
   margin-top: 26px;
   animation: beat 1.6s infinite;
 }
@@ -133,11 +180,9 @@ main {
   text-align: center;
   margin-top: 18px;
   font-size: .9rem;
-  color: #a48cc4;
-  text-shadow: 0 0 8px #fff, 0 0 3px #fff;
+  color: var(--plum);
+  text-shadow: 0 0 8px var(--card-bg), 0 0 3px var(--card-bg);
 }
-
-/* instagram card */
 .ig {
   position: absolute;
   top: 100%;
@@ -150,7 +195,7 @@ main {
   border: 1px solid #f3dbe6;
   box-shadow: 0 20px 44px #4d376833;
   text-align: left;
-  color: var(--ink);
+  color: #4d3768;
   font-weight: 500;
   text-shadow: none;
   opacity: 0;
@@ -264,7 +309,7 @@ main {
 .ig-stats b {
   display: block;
   font-size: .95rem;
-  color: var(--ink);
+  color: #4d3768;
 }
 .ig p {
   margin: 10px 2px 0;
@@ -289,17 +334,35 @@ main {
 }
 
 /* ==========================================================
-   ALBUM CALENDAR
+   ALBUM CALENDAR (with 4 Corner Sticks / Tape)
    ========================================================== */
 .album {
   position: relative;
   margin-top: 30px;
-  background: #ffffffd9;
+  background: var(--card-bg);
   border: 1px solid #f3dbe6;
   border-radius: 28px;
   padding: 20px 12px 16px;
   box-shadow: 0 16px 40px #cdb9ea40;
+  backdrop-filter: blur(8px);
 }
+/* 4 Corner Sticks / Tape */
+.tape {
+  position: absolute;
+  width: 38px;
+  height: 15px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  z-index: 5;
+  pointer-events: none;
+  border-radius: 2px;
+}
+.tape.tl { top: -7px; left: 18px; transform: rotate(-7deg); }
+.tape.tr { top: -7px; right: 18px; transform: rotate(8deg); }
+.tape.bl { bottom: -7px; left: 18px; transform: rotate(6deg); }
+.tape.br { bottom: -7px; right: 18px; transform: rotate(-8deg); }
+
 .album h2 {
   font: italic 600 2rem 'Cormorant Garamond', serif;
   text-align: center;
@@ -387,7 +450,6 @@ main {
   animation: glow 3s ease-in-out infinite;
   animation-delay: calc(var(--n, 0) * -.3s);
 }
-
 .cnt {
   display: flex;
   align-items: center;
@@ -493,6 +555,8 @@ button:focus-visible {
   display: flex;
   flex-direction: column;
   box-shadow: 0 14px 34px #b57a9a55;
+  background: var(--card-bg);
+  backdrop-filter: blur(8px);
 }
 .wg:active {
   cursor: grabbing;
@@ -564,7 +628,6 @@ button:focus-visible {
   width: 216px;
   height: auto;
   padding: 12px;
-  background: #ebcdd6;
 }
 .stage {
   position: relative;
@@ -1290,40 +1353,6 @@ button:focus-visible {
   to { transform: translate(var(--sway), 112vh) rotate(var(--spin)); }
 }
 
-/* ==========================================================
-   STICKERS  (Stay still - Wobble animation removed)
-   ========================================================== */
-#stk {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-  mix-blend-mode: multiply;
-}
-.st {
-  position: absolute;
-  width: var(--w, 120px);
-  height: auto;
-  translate: -50% -50%;
-  transform: rotate(var(--r, 0deg));
-  transform-origin: 50% 85%;
-  user-select: none;
-}
-
-/* ==========================================================
-   WALLPAPER
-   ========================================================== */
-.bg {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  opacity: .75;
-  pointer-events: none;
-}
-/* small phones */
 @media (max-width: 460px) {
   #mw {
     left: 8px;
