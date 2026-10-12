@@ -34,8 +34,10 @@ const TRACKS = [
 //    bright pink) or if the picture has a different file name.
 const PHOTO_FOLDER = "photos/";
 const PHOTOS = {
-  "2025-10-02": { src: "photos/2025-10-02.jpg", note: "First Lunch Together" },
-  "2025-10-14": { src: "photos/2025-10-14.jpg", note: "First Hug" },
+
+   "2024-10-04": { src: "photos/2024-10-04.jpg", note: "When we were complete strangers" },
+  "2025-10-02": { src: "photos/2025-10-02.jpg", note: "First lunch together" },
+  "2025-10-14": { src: "photos/2025-10-14.jpg", note: "First hug" },
   // "2025-12-25": { src: "photos/christmas.jpg",  note: "Our first Christmas" },
 };
 
