@@ -85,27 +85,7 @@ const CELEBRATE = {
   sticker: "2.png"                 // a picture from the stickers folder shown on the popup ("" = none)
 };
 
-// 7) TRAVEL LOG ------------------------------------------------------
-//    The "Our date map" under the calendar. Every { ... } line is one place you went on a date.
-//      name = the place        date  = when (any text, for example "13 Oct 2025")
-//      note = a short memory   emoji = the little icon on the pin
-//      photo = optional picture, for example "photos/cafe.jpg"
-//      next: true = a dotted "next stop" pin (a place you want to go to)
-//    The pins are joined in order by a dotted road. Copy a line to add a place.
-const PLACES = [
-  { name: "Our first date",     date: "Oct 2025", emoji: "☕", photo: "", note: "Example: write a little memory about this place here." },
-  { name: "Movie night",        date: "Nov 2025", emoji: "🎬", photo: "", note: "Example: we shared the popcorn." },
-  { name: "Beach day",          date: "Dec 2025", emoji: "🏖️", photo: "", note: "Example: sand, sunset and ice cream." },
-  { name: "Picnic in the park", date: "Feb 2026", emoji: "🧺", photo: "", note: "Example: sandwiches and silly photos." },
-  { name: "Night market",       date: "Jun 2026", emoji: "🍢", photo: "", note: "Example: we tried every snack." },
-  { name: "Next stop?",         date: "Soon",     emoji: "✈️", photo: "", note: "Our next adventure goes here.", next: true }
-];
-
-/* ===================================================================== */
-
-
-/* ---------- today + days counter (updates by itself after midnight) ---------- */
-let today, days;
+brationlet today, days;
 
 function refreshToday() {
   const t = new Date();
@@ -463,7 +443,33 @@ let Y = today.getFullYear(),
 
 const key = (y, m, d) => `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 
+// is there a picture for a day?  (listed in PHOTOS, or a file named photos/YYYY-MM-DD.jpg)
+const seen = {};                                    // 'YYYY-MM-DD' -> true / false
+let gen = 0;                                        // lets us ignore answers that arrive after you changed month
+
+const hasPic = k => k in seen ? Promise.resolve(seen[k]) : new Promise(res => {
+  if (PHOTOS[k]) return res(seen[k] = true);
+  const im = new Image();
+  im.onload = () => res(seen[k] = true);
+  im.onerror = () => res(seen[k] = false);
+  im.src = PHOTO_FOLDER + k + '.jpg';
+});
+
+// how many pictures does a month have?
+const monthPics = (y, m) => Promise.all(
+  Array.from({ length: new Date(y, m + 1, 0).getDate() }, (_, i) => hasPic(key(y, m, i + 1)))
+).then(r => r.filter(Boolean).length);
+
+const CAM = '<svg viewBox="0 0 24 24"><path d="M9 5 7.5 7H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2.5L15 5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>';
+
+function setCount(c) {
+  const el = $('#cnt');
+  el.className = 'cnt show ' + (c ? 'pop' : 'none');
+  el.innerHTML = CAM + '<span>' + (c ? `<b>${c}</b> picture${c === 1 ? '' : 's'} this month` : 'No pictures yet this month') + '</span>';
+}
+
 function draw() {
+  const g = ++gen;
   $('#cm').textContent = `${MN[M]} ${Y}`;
 
   // weekday letters + empty cells before the 1st of the month
@@ -471,11 +477,32 @@ function draw() {
         + '<i></i>'.repeat(new Date(Y, M, 1).getDay());
 
   // one cell per day, each with a heart button
-  for (let d = 1, n = new Date(Y, M + 1, 0).getDate(); d <= n; d++) {
-    const k = key(Y, M, d);
-    h += `<div class="d${k === key(today.getFullYear(), today.getMonth(), today.getDate()) ? ' t' : ''}">${d}<button class="h${PHOTOS[k] ? ' on' : ''}" data-k="${k}" aria-label="Photo for ${k}">♥</button></div>`;
+  const days = new Date(Y, M + 1, 0).getDate();
+  for (let d = 1; d <= days; d++) {
+    const k = key(Y, M, d),
+          known = PHOTOS[k] || seen[k];
+    h += `<div class="d${k === key(today.getFullYear(), today.getMonth(), today.getDate()) ? ' t' : ''}${known ? ' has' : ''}" style="--n:${d}">${d}<button class="h${known ? ' on' : ''}" data-k="${k}" aria-label="Photo for ${k}">♥</button></div>`;
   }
   $('#grid').innerHTML = h;
+
+  // look for the pictures: days light up as they are found, then the counter appears
+  for (let d = 1; d <= days; d++) {
+    const k = key(Y, M, d);
+    hasPic(k).then(ok => {
+      if (!ok || g !== gen) return;
+      const b = $('#grid').querySelector(`.h[data-k="${k}"]`);
+      if (b) { b.classList.add('on'); b.parentNode.classList.add('has'); }
+    });
+  }
+  monthPics(Y, M).then(c => { if (g === gen) setCount(c); });
+
+  // soft dots on the arrows when the neighbouring months have pictures too
+  [-1, 1].forEach(step => {
+    const t = Y * 12 + M + step,
+          arrow = $(`.nav [data-s="${step}"]`);
+    arrow.classList.remove('more');
+    monthPics(Math.floor(t / 12), t % 12).then(c => { if (g === gen) arrow.classList.toggle('more', c > 0); });
+  });
 }
 
 // « ‹ › » buttons: change month / year
@@ -510,74 +537,6 @@ $('#grid').onclick = e => {
 draw();
 
 
-/* ---------- travel log: "our date map" ---------- */
-const tripMap = $('#tripMap');
-
-function renderTrip() {
-  const n = PLACES.length;
-  if (!n) {
-    tripMap.innerHTML = '<p class="empty">Add your first date place in js/script.js (PLACES).</p>';
-    tripMap.style.height = '';
-    return;
-  }
-
-  const W = tripMap.clientWidth,
-        ROW = 120,                                      // distance between two pins
-        TOP = 72,                                       // where the first pin stands
-        H = TOP + (n - 1) * ROW + 64,
-        pts = PLACES.map((p, i) => [W * (i % 2 ? .74 : .26), TOP + i * ROW]);
-
-  // the dotted road: a smooth S-curve from pin to pin
-  const road = pts.map((p, i) => {
-    if (!i) return `M${p[0]},${p[1]}`;
-    const a = pts[i - 1];
-    return `C${a[0]},${a[1] + ROW * .5} ${p[0]},${p[1] - ROW * .5} ${p[0]},${p[1]}`;
-  }).join(' ');
-
-  const blobs = pts.map((p, i) =>
-    `<circle class="blob" cx="${p[0] + (i % 2 ? -34 : 34)}" cy="${p[1] - 20}" r="${W * .26}" fill="${['#e7dcfb', '#fbdbe8', '#dff3e8', '#fde9d4'][i % 4]}"/>`
-  ).join('');
-
-  const compass = `<g transform="translate(${W - 34} 34)"><circle class="compass-ring" r="16"/><path class="compass-needle" d="M0-11 4 0 0 11-4 0Z"/><text class="compass-n" y="-19">N</text></g>`;
-
-  const stops = PLACES.map((p, i) => `
-    <button class="stop ${i % 2 ? 'R' : 'L'}${p.next ? ' next' : ''}" style="left:${pts[i][0]}px; top:${pts[i][1]}px; --i:${i}" data-i="${i}" aria-label="${p.name}">
-      <svg class="pin" viewBox="-20 -52 40 54"><path d="M0 0C-12-14-18-24-18-33a18 18 0 1 1 36 0C18-24 12-14 0 0Z"/><circle cy="-33" r="13"/></svg>
-      <i class="emo">${p.next ? '?' : p.emoji || i + 1}</i>
-      <span class="lbl"><b>${p.name}</b><small>${p.date || ''}</small></span>
-    </button>`).join('');
-
-  tripMap.style.height = H + 'px';
-  tripMap.innerHTML = `<svg class="route-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">${blobs}<path class="road-bg" d="${road}"/><path class="road" d="${road}"/>${compass}</svg>${stops}`;
-
-  const visited = PLACES.filter(p => !p.next).length;
-  $('#tripSub').textContent = `${visited} place${visited === 1 ? '' : 's'} we've been to together${visited < n ? ' · the next stop is waiting' : ''}`;
-}
-
-// tapping a pin opens the memory
-tripMap.onclick = e => {
-  const b = e.target.closest('.stop');
-  if (!b) return;
-  const i = +b.dataset.i,
-        p = PLACES[i];
-  show(`<div class="pc place"><div class="ph"><span><i class="big">${p.emoji || '📍'}</i>${p.photo ? '' : '<br><small>Add a photo in js/script.js</small>'}</span>${p.photo ? `<img src="${p.photo}" alt="${p.name}" onerror="this.remove()">` : ''}</div><p class="cap">${p.name}</p><p class="pdate">${p.next ? 'Next stop' : 'Stop ' + (i + 1)}${p.date ? ' · ' + p.date : ''}</p>${p.note ? `<p class="pnote">${p.note}</p>` : ''}</div>`);
-};
-
-renderTrip();
-
-// the pins drop onto the map when you scroll to it
-if ('IntersectionObserver' in window) {
-  new IntersectionObserver((entries, ob) => entries.forEach(en => {
-    if (en.isIntersecting) { tripMap.classList.add('go'); ob.disconnect(); }
-  }), { threshold: .2 }).observe(tripMap);
-} else {
-  tripMap.classList.add('go');
-}
-
-let tripTimer;
-addEventListener('resize', () => { clearTimeout(tripTimer); tripTimer = setTimeout(renderTrip, 150); });
-
-
 /* ---------- instagram card when the mouse is over an avatar ---------- */
 const IGLOGO = `<svg class="ig-logo" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16.8" cy="7.2" r="1.1" fill="currentColor"/></svg>`;
 
@@ -600,9 +559,37 @@ document.querySelectorAll('.who[data-ig]').forEach(who => {
       <a class="ig-btn" href="https://instagram.com/${p.user}" target="_blank" rel="noopener">View profile</a>
     </div>`);
 
+  const card = who.querySelector('.ig'),
+        link = who.querySelector('.ig-btn');
+
+  // keep the card inside the screen; its little arrow keeps pointing at the name
+  const fit = () => {
+    const r = who.getBoundingClientRect(),
+          cx = r.left + r.width / 2,
+          half = card.offsetWidth / 2;
+    let shift = 0;
+    if (cx - half < 8) shift = 8 - (cx - half);
+    else if (cx + half > innerWidth - 8) shift = innerWidth - 8 - (cx + half);
+    card.style.setProperty('--shift', shift + 'px');
+  };
+  who.addEventListener('pointerenter', fit);
+  who.addEventListener('focusin', fit);
+
+  // clicking "View profile": the card closes by itself and stays closed until the mouse leaves
+  link.addEventListener('click', () => {
+    who.classList.add('shut');
+    who.classList.remove('open');
+    link.blur();
+  });
+  who.addEventListener('pointerleave', () => who.classList.remove('shut'));
+
   // phones have no hover: tap the avatar instead
   if (matchMedia('(hover:none)').matches) {
-    who.addEventListener('click', e => { if (!e.target.closest('a')) who.classList.toggle('open'); });
+    who.addEventListener('click', e => {
+      if (e.target.closest('a')) return;
+      fit();
+      who.classList.toggle('open');
+    });
   }
 });
 if (matchMedia('(hover:none)').matches) {
