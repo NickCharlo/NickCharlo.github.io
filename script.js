@@ -20,7 +20,7 @@ const $ = s => document.querySelector(s);
 //    Delete the lines you don't need, copy a line to add more songs.
 const TRACKS = [
   { title: "Enchanted",          artist: "Taylor Swift", url: "music/Taylor Swift - Enchanted (Taylor's Version) (Lyric Video).mp3", cover: "music/enchanted.png" },
-  { title: "Song number two",   artist: "Artist name",   url: "", cover: "music/cover2.jpg" },
+  { title: "Iris",   artist: " Goo Goo Dolls",   url: "music/Iris.mp3", cover: "music/iriscover.png" },
   { title: "Song number three", artist: "Artist name",   url: "", cover: "music/cover3.jpg" }
 ];
 
