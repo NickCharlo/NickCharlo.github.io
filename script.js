@@ -23,7 +23,8 @@ const TRACKS = [
   { title: "Iris",   artist: " Goo Goo Dolls",   url: "music/Iris.mp3", cover: "music/iriscover.png" },
   { title: "Mine", artist: "Taylor Swift",   url: "music/Taylor Swift - Mine.mp3", cover: "music/enchanted.png" },
    { title: "Neighbourhood", artist: "Taylor Swift",   url: "music/Reflections.mp3", cover: "music/neighbourhood.png" },
-    { title: "Everything I Do", artist: "Bryan Adams",   url: "music/Everything I do.mp3", cover: "music/bryan adams.png" }
+    { title: "Everything I Do", artist: "Bryan Adams",   url: "music/Everything I do.mp3", cover: "music/bryan adams.png" },
+    { title: "The Way I Loved You", artist: "Taylor Swift",   url: "music/Taylor Swift - The Way I Loved You (Taylor's Version) (Lyric Video).mp3", cover: "music/enchanted.png" }
 ];
 
 // 2) PHOTOS -----------------------------------------------------------
