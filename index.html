@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Aurish &amp; Nick</title>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Cormorant+Garamond:ital,wght@1,600&family=Lora:wght@500&family=Quicksand:wght@500;600&display=swap" rel="stylesheet">
 
   <!-- Styles -->
-  <!-- if the css folder is missing (files uploaded flat), it falls back to style.css next to this file -->
   <link rel="stylesheet" href="css/style.css" onerror="this.onerror=null;this.href='style.css'">
 </head>
 
@@ -37,21 +36,21 @@
     <!-- ========== 2. AVATARS (pictures go in the "avatars" folder) ========== -->
     <section class="pair">
       <div class="who" data-ig="aurish">
-        <div class="av">A<!-- PLACEHOLDER: Aurish's picture is avatars/aurish.png --><img src="avatars/aurish.png" alt="" onerror="this.remove()"></div>
+        <div class="av">A<img src="avatars/aurish.png" alt="" onerror="this.remove()"></div>
         Aurish
       </div>
 
       <div class="beat">♥</div>
 
       <div class="who" data-ig="nick">
-        <div class="av">N<!-- PLACEHOLDER: Nick's picture is avatars/nick.png --><img src="avatars/nick.png" alt="" onerror="this.remove()"></div>
+        <div class="av">N<img src="avatars/nick.png" alt="" onerror="this.remove()"></div>
         Nick
       </div>
     </section>
 
     <p class="since">Together since October 13, 2025</p>
 
-    <!-- ========== 3. ALBUM CALENDAR (the calendar itself is drawn by js/script.js) ========== -->
+    <!-- ========== 3. ALBUM CALENDAR ========== -->
     <section class="album">
       <h2>Our album</h2>
       <p class="cnt" id="cnt" aria-live="polite"></p>
@@ -75,7 +74,7 @@
   </main>
 
 
-  <!-- ========== 4. DRAGGABLE MUSIC PLAYER (your songs: js/script.js > TRACKS) ========== -->
+  <!-- ========== 4. DRAGGABLE MUSIC PLAYER ========== -->
   <div class="wg" id="mw">
     <div class="stage">
       <div class="art">
@@ -87,7 +86,6 @@
         <div class="eq"><i></i><i></i><i></i><i></i></div>
       </div>
 
-      <!-- playlist (opens over the picture) -->
       <ol class="list" id="list" data-nodrag hidden></ol>
       <button class="lbtn" id="lb" data-nodrag aria-label="Show the playlist" aria-pressed="false">
         <svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h10v2H4z"/></svg>
@@ -128,7 +126,7 @@
   </div>
 
 
-  <!-- ========== 5. DRAGGABLE ENVELOPE (letter text: js/script.js > LETTER) ========== -->
+  <!-- ========== 5. DRAGGABLE ENVELOPE ========== -->
   <div class="wg" id="ew" role="button" tabindex="0" aria-label="Open the love letter">
     <div class="glow"></div>
     <div class="env">
@@ -143,11 +141,9 @@
     </div>
   </div>
 
-
   <!-- popup used by the photo card and the A4 letter -->
   <div id="ov"><div id="box"></div></div>
 
-  <!-- same fallback for the script: js/script.js first, then script.js next to this file -->
   <script src="js/script.js" onerror="var s=document.createElement('script');s.src='script.js';document.body.append(s)"></script>
 </body>
 </html>
