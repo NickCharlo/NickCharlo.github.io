@@ -10,30 +10,6 @@ document.addEventListener('dblclick', e => {
   e.preventDefault();
 }, { passive: false });
 
-/* ---------- Theme Switcher ---------- */
-const themes = ['', 'peach', 'midnight'];
-const themeBtn = $('#themeToggle');
-
-let currentThemeIndex = localStorage.getItem('site_theme_idx') ? parseInt(localStorage.getItem('site_theme_idx')) : 0;
-
-function applyTheme(idx) {
-  currentThemeIndex = idx;
-  const theme = themes[idx];
-  if (theme) {
-    document.body.setAttribute('data-theme', theme);
-  } else {
-    document.body.removeAttribute('data-theme');
-  }
-  localStorage.setItem('site_theme_idx', idx);
-}
-
-applyTheme(currentThemeIndex);
-
-themeBtn.onclick = () => {
-  currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-  applyTheme(currentThemeIndex);
-};
-
 
 /* =====================================================================
    EDIT ME
@@ -69,12 +45,14 @@ const INSTAGRAM = {
   nick:   { user: "nick",   name: "Nick",   bio: "Your bio here ✨", posts: "", followers: "", following: "" }
 };
 
-// 6) CELEBRATION ------------------------------------------------------
+// 6) CELEBRATION (Monthsary & Anniversary Audio & Stickers) ----------
 const CELEBRATE = {
   days: 3,
   monthsary: "Happy Monthsary!",
   anniversary: "Happy Anniversary!",
-  sticker: "2.png"
+  sticker: "2.png",
+  voiceMonthsary: "audio/monthsary.mp3",   // Place your .mp3 voice note here
+  voiceAnniversary: "audio/anniversary.mp3" // Place your .mp3 voice note here
 };
 
 /* ===================================================================== */
@@ -503,7 +481,20 @@ $('#grid').onclick = e => {
         src = p.src || PHOTO_FOLDER + k + '.jpg',
         [y, m, d] = k.split('-'),
         lbl = `${MN[m - 1]} ${+d}, ${y}`;
-  show(`<div class="pc"><div class="ph"><span>📷 Photo for<br>${lbl}<br><small>${src}</small></span><img src="${src}" alt="Photo from ${lbl}" onerror="this.remove()"></div><p class="cap">${p.note || lbl}</p></div>`);
+
+  // Pick a random sticker (1 to 4) for this picture popup
+  const randomSticker = Math.floor(Math.random() * 4) + 1;
+
+  show(`
+    <div class="pc">
+      <img class="popup-sticker" src="stickers/${randomSticker}.png" alt="" onerror="this.style.display='none'">
+      <div class="ph">
+        <span>📷 Photo for<br>${lbl}<br><small>${src}</small></span>
+        <img src="${src}" alt="Photo from ${lbl}" onerror="this.remove()">
+      </div>
+      <p class="cap">${p.note || lbl}</p>
+    </div>
+  `);
 };
 
 draw();
@@ -568,7 +559,7 @@ if (matchMedia('(hover:none)').matches) {
 }
 
 
-/* ---------- monthsary / anniversary popup ---------- */
+/* ---------- monthsary / anniversary popup + voice message ---------- */
 const ord = n => { const s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
 
 function celebration(date) {
@@ -605,7 +596,8 @@ function celebrate(c) {
   const anniv = c.type === 'anniversary',
         title = anniv ? CELEBRATE.anniversary : CELEBRATE.monthsary,
         unit = anniv ? 'year' : 'month',
-        name = anniv ? 'anniversary' : 'monthsary';
+        name = anniv ? 'anniversary' : 'monthsary',
+        voiceSrc = anniv ? CELEBRATE.voiceAnniversary : CELEBRATE.monthsary;
 
   let k = 0;
   const words = title.split(' ').map(w => `<span class="word">${[...w].map(ch => `<span style="--i:${k++}">${ch}</span>`).join('')}</span>`).join(' ');
@@ -616,10 +608,49 @@ function celebrate(c) {
       <div class="party-ribbon">${ord(c.n)} ${name}</div>
       <h2>${words}</h2>
       <p>${c.n} ${unit}${c.n > 1 ? 's' : ''} of loving each other</p>
+      
+      <div class="vn-card">
+        <button class="vn-btn" id="vnPlay" aria-label="Play Voice Message">▶</button>
+        <div class="vn-info">
+          <b>Voice Message 💌</b>
+          <small>Tap to play our special message</small>
+        </div>
+      </div>
+
       <div class="party-hearts"><i>💗</i><i>💖</i><i>💗</i></div>
       <small>Aurish &amp; Nick · ${days} days together</small>
-    </div>`, stopConfetti);
+    </div>`, () => {
+    stopConfetti();
+    if (window._vnAudio) { window._vnAudio.pause(); window._vnAudio = null; }
+  });
+
   startConfetti();
+
+  // Setup Voice Message audio playback
+  setTimeout(() => {
+    const playBtn = $('#vnPlay');
+    if (!playBtn) return;
+    const vAudio = new Audio(voiceSrc);
+    window._vnAudio = vAudio;
+    
+    // Attempt automatic playback
+    vAudio.play().then(() => {
+      playBtn.textContent = '⏸';
+    }).catch(() => {
+      // Browser blocked autoplay without user gesture; ready for manual tap
+    });
+
+    playBtn.onclick = () => {
+      if (vAudio.paused) {
+        vAudio.play();
+        playBtn.textContent = '⏸';
+      } else {
+        vAudio.pause();
+        playBtn.textContent = '▶';
+      }
+    };
+    vAudio.onended = () => { playBtn.textContent = '▶'; };
+  }, 150);
 }
 
 function checkCelebration() {
