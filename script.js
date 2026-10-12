@@ -40,7 +40,7 @@ const PHOTOS = {
   "2025-10-14": { src: "photos/2025-10-14.jpg", note: "First hug" },
    "2025-10-09": { src: "photos/2025-10-09.jpg", note: "During division science fair" },
    "2025-10-08": { src: "photos/2025-10-08.jpg", note: "Became slightly clingy" },
-  // "2025-11-02": { src: "photos/first-trip.jpg", note: "Our first trip" },
+ "2025-10-03": { src: "photos/2025-10-03.jpg", note: "Mcdo date" },
   // "2025-12-25": { src: "photos/christmas.jpg",  note: "Our first Christmas" },
 };
 
