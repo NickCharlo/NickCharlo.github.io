@@ -1,10 +1,15 @@
 // =====================================================================
-//  Aurish & Nick  -  js/script.js
-//  Everything you may want to change is inside the "EDIT ME" block.
+//   Aurish & Nick  -  js/script.js
+//   Everything you may want to change is inside the "EDIT ME" block.
 // =====================================================================
 
 const START = new Date(2025, 9, 13);   // anniversary 10/13/2025  (months start at 0, so 9 = October)
 const $ = s => document.querySelector(s);
+
+/* ---------- Anti-zooming (double click prevention) ---------- */
+document.addEventListener('dblclick', e => {
+  e.preventDefault();
+}, { passive: false });
 
 
 /* =====================================================================
@@ -12,43 +17,19 @@ const $ = s => document.querySelector(s);
    ===================================================================== */
 
 // 1) MUSIC ------------------------------------------------------------
-//    This is your playlist. Every { ... } line is one song:
-//      url   = a file in the "music" folder (music/song.mp3) or a direct link ending in .mp3
-//              (Dropbox / Google Drive share links are converted automatically).
-//              YouTube, Spotify & co. links can NOT play inside this player.
-//      cover = album picture (optional)   title / artist = what the player shows
-//    Delete the lines you don't need, copy a line to add more songs.
 const TRACKS = [
-  { title: "Enchanted",          artist: "Taylor Swift", url: "music/Taylor Swift - Enchanted (Taylor's Version) (Lyric Video).mp3", cover: "music/enchanted.png" },
-  { title: "Iris",   artist: " Goo Goo Dolls",   url: "music/Iris.mp3", cover: "music/iriscover.png" },
-  { title: "Mine", artist: "Taylor Swift",   url: "music/Taylor Swift - Mine.mp3", cover: "music/enchanted.png" },
-   { title: "Reflections", artist: "Neighbourhood",   url: "music/Reflections.mp3", cover: "music/neighbourhood.png" },
-    { title: "Everything I Do", artist: "Bryan Adams",   url: "music/Everything I do.mp3", cover: "music/bryan adams.png" },
-    { title: "The Way I Loved You", artist: "Taylor Swift",   url: "music/Taylor Swift - The Way I Loved You (Taylor's Version) (Lyric Video).mp3", cover: "music/enchanted.png" }
+  { title: "Our Song",         artist: "Aurish & Nick", url: "", cover: "music/cover1.jpg" },
+  { title: "Song number two",    artist: "Artist name",   url: "", cover: "music/cover2.jpg" },
+  { title: "Song number three", artist: "Artist name",   url: "", cover: "music/cover3.jpg" }
 ];
 
 // 2) PHOTOS -----------------------------------------------------------
-//    Every calendar day automatically looks for  photos/YYYY-MM-DD.jpg
-//    (example: photos/2025-10-13.jpg). Just drop the picture in the "photos" folder.
-//    Days with a picture glow by themselves and the album counts them. Add a line below
-//    if you want a caption on that day or if the picture has a different file name.
 const PHOTO_FOLDER = "photos/";
 const PHOTOS = {
-  "2024-10-04": { src: "photos/2024-10-04.jpg", note: "When we were complete strangers" },
-   "2025-09-29": { src: "photos/2025-09-29.jpg", note: "School science fair awarding" },
-  "2025-10-02": { src: "photos/2025-10-02.jpg", note: "First lunch together" },
-  "2025-10-14": { src: "photos/2025-10-14.jpg", note: "First hug" },
-   "2025-10-09": { src: "photos/2025-10-09.jpg", note: "During division science fair" },
-   "2025-10-08": { src: "photos/2025-10-08.jpg", note: "Became slightly clingy" },
- "2025-10-03": { src: "photos/2025-10-03.jpg", note: "Mcdo date" },
-  "2025-11-13": { src: "photos/2025-11-13.jpg", note: "Mcdo date again hehe" },
-   "2026-03-09": { src: "photos/2026-03-09.jpg", note: "During drama play idunno maybe" },
-   "2026-03-06": { src: "photos/2026-03-06.jpg", note: "During training for her sports writing regional" },
-    "2026-03-16": { src: "photos/2026-03-16.jpg", note: "Pic after her 5 day from RSPC" },
+  "2025-10-13": { src: "photos/2025-10-13.jpg", note: "The day it all began 💜" },
 };
 
 // 3) LETTER -----------------------------------------------------------
-//    Shown on the A4 paper when the envelope is opened. Every line in "body" is a new paragraph.
 const LETTER = {
   to: "My love,",
   from: "Aurish",
@@ -60,19 +41,12 @@ const LETTER = {
 };
 
 // 4) INSTAGRAM --------------------------------------------------------
-//    Shown when the mouse is over an avatar (on phones: tap the avatar).
-//    user = Instagram username without the @   (leave "" to hide the card)
-//    posts / followers / following are optional - leave "" to hide them.
 const INSTAGRAM = {
-  aurish: { user: "mixed_in_the_stars02", name: "mixed_in_the_stars02", bio: "Cutie pie ✨", posts: "", followers: "", following: "" },
-  nick:   { user: "NickCharlo",   name: "NickCharlo",   bio: "The one who made this ✨", posts: "", followers: "", following: "" }
+  aurish: { user: "aurish", name: "Aurish", bio: "Your bio here ✨", posts: "", followers: "", following: "" },
+  nick:   { user: "nick",   name: "Nick",   bio: "Your bio here ✨", posts: "", followers: "", following: "" }
 };
 
 // 5) STICKERS ---------------------------------------------------------
-//    Put your cat pictures in the "stickers" folder and list their file names here.
-//    They are scattered over the WHOLE background (fixed in place) and wobble.
-//    STICKER_SIZE is optional: 1 = normal, bigger number = bigger picture
-//    (use it when one picture has lots of empty space around the cat).
 const STICKER_FILES = [
   "1.png", "2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png",
   "9.png", "10.png", "11.png", "12.png", "13.png", "14.png", "15.png", "16.png"
@@ -80,20 +54,17 @@ const STICKER_FILES = [
 const STICKER_SIZE = { "1.png": 1.5, "2.png": 1.5, "3.png": 1.25, "4.png": .85, "5.png": .75, "6.png": 1.45 };
 
 // 6) CELEBRATION ------------------------------------------------------
-//    On every monthsary (the 13th of each month) and on the anniversary (13 October)
-//    a popup says hello. It shows on that day and stays for "days" days, then disappears.
-//    Preview it any time:  open index.html?celebrate=monthsary   or   index.html?celebrate=anniversary
 const CELEBRATE = {
   days: 3,
   monthsary: "Happy Monthsary!",
   anniversary: "Happy Anniversary!",
-  sticker: "2.png"                 // a picture from the stickers folder shown on the popup ("" = none)
+  sticker: "2.png"
 };
 
 /* ===================================================================== */
 
 
-/* ---------- today + days counter (updates by itself after midnight) ---------- */
+/* ---------- today + days counter ---------- */
 let today, days;
 
 function refreshToday() {
@@ -106,8 +77,7 @@ refreshToday();
 
 
 /* ---------- draggable widgets ---------- */
-// tap = click | drag = move (lifts + tilts) | drop it past the left / right edge = it hides, a handle stays
-const PEEK = 34;                                   // how much of a hidden widget stays visible
+const PEEK = 34;
 
 document.body.insertAdjacentHTML('beforeend', '<div class="edge" id="edgeL"></div><div class="edge" id="edgeR"></div>');
 const edgeL = $('#edgeL'),
@@ -123,7 +93,6 @@ function drag(el, onTap) {
     el.style.right = el.style.bottom = 'auto';
   };
 
-  // springy slide to a spot
   const glide = (x, y) => {
     el.classList.add('glide');
     place(x, y);
@@ -131,14 +100,14 @@ function drag(el, onTap) {
     el._g = setTimeout(() => el.classList.remove('glide'), 650);
   };
 
-  const dock = side => {                           // hide at the left / right edge
+  const dock = side => {
     el.dataset.dock = side;
     el.classList.toggle('dock-l', side === 'L');
     el.classList.toggle('dock-r', side === 'R');
     glide(side === 'L' ? PEEK - el.offsetWidth : innerWidth - PEEK, el.offsetTop);
   };
 
-  const undock = () => {                           // slide back out
+  const undock = () => {
     const side = el.dataset.dock;
     delete el.dataset.dock;
     el.classList.remove('dock-l', 'dock-r');
@@ -173,13 +142,11 @@ function drag(el, onTap) {
       Math.min(innerHeight - h, Math.max(0, oy + dy))
     );
 
-    // tilt with the speed of the drag
     const now = performance.now();
     vx = vx * .7 + (e.clientX - lx) / Math.max(1, now - lt) * 8 * .3;
     lx = e.clientX; lt = now;
     el.style.rotate = Math.max(-9, Math.min(9, vx * 3)) + 'deg';
 
-    // pink glow when close to an edge
     const x = el.offsetLeft;
     edgeL.classList.toggle('on', x < 40);
     edgeR.classList.toggle('on', x + w > innerWidth - 40);
@@ -193,13 +160,13 @@ function drag(el, onTap) {
     edgeL.classList.remove('on');
     edgeR.classList.remove('on');
 
-    if (!mv) {                                     // it was a tap
+    if (!mv) {
       if (el.dataset.dock) undock(); else if (onTap) onTap();
       return;
     }
     const w = el.offsetWidth,
           x = el.offsetLeft,
-          out = Math.max(0, -x) + Math.max(0, x + w - innerWidth);   // how much is outside the screen
+          out = Math.max(0, -x) + Math.max(0, x + w - innerWidth);
     if (out > w * .35) {
       dock(x + w / 2 < innerWidth / 2 ? 'L' : 'R');
     } else {
@@ -212,13 +179,12 @@ function drag(el, onTap) {
   el.addEventListener('pointercancel', end);
 }
 
-// keep hidden widgets at the edge when the window changes size
 addEventListener('resize', () => document.querySelectorAll('.wg[data-dock]').forEach(w => {
   w.style.left = (w.dataset.dock === 'L' ? PEEK - w.offsetWidth : innerWidth - PEEK) + 'px';
 }));
 
 
-/* ---------- popup (photo card / letter) ---------- */
+/* ---------- popup ---------- */
 const ov = $('#ov'),
       box = $('#box');
 let shownAt = 0,
@@ -241,7 +207,6 @@ const hide = () => {
   }
 };
 
-// the 500ms guard stops the tap that opened the popup from closing it again
 ov.onclick = e => {
   if (Date.now() - shownAt > 500 && (e.target === ov || e.target.closest('.x'))) hide();
 };
@@ -249,7 +214,6 @@ addEventListener('keydown', e => e.key === 'Escape' && hide());
 
 
 /* ---------- music player ---------- */
-// rewind / forward = previous / next song (or a 10 second skip when there is only one song)
 const au = new Audio(),
       mw = $('#mw'),
       sk = $('#sk'),
@@ -260,13 +224,11 @@ const au = new Audio(),
 let ti = 0,
     shuf = 0;
 
-au.loop = TRACKS.length === 1;                       // one song = repeat it, a playlist = go to the next one
+au.loop = TRACKS.length === 1;
 $('#rp').classList.toggle('on', au.loop);
 
-// links that can't be played by a normal audio player
 const NOPE = /youtu\.?be|spotify\.com|soundcloud\.com|music\.apple\.com|deezer\.com/i;
 
-// Dropbox / Google Drive share links -> direct links
 const direct = u => u
   .replace(/^(https?:\/\/(?:www\.)?dropbox\.com\/[^?]*)\?.*$/, '$1?raw=1')
   .replace(/^https?:\/\/drive\.google\.com\/file\/d\/([^/]+).*$/, 'https://drive.google.com/uc?export=download&id=$1');
@@ -287,7 +249,6 @@ function tick() {
   sk.style.setProperty('--p', p + '%');
 }
 
-// playlist rows
 list.innerHTML = TRACKS.map((t, i) =>
   `<li data-i="${i}"><span class="n">${i + 1}</span><span class="t"><b>${t.title}</b><small>${t.artist || ''}</small></span></li>`
 ).join('');
@@ -341,7 +302,6 @@ $('#fw').onclick = () => skip(1);
 $('#sh').onclick = e => e.currentTarget.classList.toggle('on', shuf ^= 1);
 $('#rp').onclick = e => e.currentTarget.classList.toggle('on', au.loop = !au.loop);
 
-// playlist button + picking a song
 lb.onclick = () => {
   const open = list.hidden;
   list.hidden = !open;
@@ -360,7 +320,6 @@ drag(mw);
 
 
 /* ---------- envelope ---------- */
-// tap 1 = open + things float out | tap 2 = read the A4 letter | leaving the letter closes the envelope again
 const ew = $('#ew');
 let step = 0;
 
@@ -370,7 +329,6 @@ function closeEnv() {
   document.querySelectorAll('.env .p').forEach(p => p.remove());
 }
 
-// hearts, butterflies and flowers floating out of the envelope
 function burst() {
   if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
 
@@ -422,12 +380,10 @@ function burst() {
 
 const tapEnv = () => {
   if (!step) {
-    // 1st tap: open the envelope
     step = 1;
     ew.classList.add('open');
     burst();
   } else {
-    // 2nd tap: show the letter, and close the envelope again after it is closed
     show(
       `<article class="a4"><h3>${LETTER.to}</h3><br>${LETTER.body.map(p => `<p>${p}</p>`).join('')}<p class="sg">— ${LETTER.from} 🌸</p></article>`,
       () => setTimeout(() => { if (!ov.classList.contains('show')) closeEnv(); }, 450)
@@ -452,9 +408,8 @@ let Y = today.getFullYear(),
 
 const key = (y, m, d) => `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 
-// is there a picture for a day?  (listed in PHOTOS, or a file named photos/YYYY-MM-DD.jpg)
-const seen = {};                                    // 'YYYY-MM-DD' -> true / false
-let gen = 0;                                        // lets us ignore answers that arrive after you changed month
+const seen = {};
+let gen = 0;
 
 const hasPic = k => k in seen ? Promise.resolve(seen[k]) : new Promise(res => {
   if (PHOTOS[k]) return res(seen[k] = true);
@@ -464,7 +419,6 @@ const hasPic = k => k in seen ? Promise.resolve(seen[k]) : new Promise(res => {
   im.src = PHOTO_FOLDER + k + '.jpg';
 });
 
-// how many pictures does a month have?
 const monthPics = (y, m) => Promise.all(
   Array.from({ length: new Date(y, m + 1, 0).getDate() }, (_, i) => hasPic(key(y, m, i + 1)))
 ).then(r => r.filter(Boolean).length);
@@ -481,21 +435,18 @@ function draw() {
   const g = ++gen;
   $('#cm').textContent = `${MN[M]} ${Y}`;
 
-  // weekday letters + empty cells before the 1st of the month
   let h = "SMTWTFS".split('').map(x => `<div class="wd">${x}</div>`).join('')
         + '<i></i>'.repeat(new Date(Y, M, 1).getDay());
 
-  // one cell per day, each with a heart button
-  const days = new Date(Y, M + 1, 0).getDate();
-  for (let d = 1; d <= days; d++) {
+  const daysInMonth = new Date(Y, M + 1, 0).getDate();
+  for (let d = 1; d <= daysInMonth; d++) {
     const k = key(Y, M, d),
           known = PHOTOS[k] || seen[k];
     h += `<div class="d${k === key(today.getFullYear(), today.getMonth(), today.getDate()) ? ' t' : ''}${known ? ' has' : ''}" style="--n:${d}">${d}<button class="h${known ? ' on' : ''}" data-k="${k}" aria-label="Photo for ${k}">♥</button></div>`;
   }
   $('#grid').innerHTML = h;
 
-  // look for the pictures: days light up as they are found, then the counter appears
-  for (let d = 1; d <= days; d++) {
+  for (let d = 1; d <= daysInMonth; d++) {
     const k = key(Y, M, d);
     hasPic(k).then(ok => {
       if (!ok || g !== gen) return;
@@ -505,7 +456,6 @@ function draw() {
   }
   monthPics(Y, M).then(c => { if (g === gen) setCount(c); });
 
-  // soft dots on the arrows when the neighbouring months have pictures too
   [-1, 1].forEach(step => {
     const t = Y * 12 + M + step,
           arrow = $(`.nav [data-s="${step}"]`);
@@ -514,7 +464,6 @@ function draw() {
   });
 }
 
-// « ‹ › » buttons: change month / year
 document.querySelector('.nav').onclick = e => {
   const b = e.target.closest('[data-s]');
   if (!b) return;
@@ -524,14 +473,12 @@ document.querySelector('.nav').onclick = e => {
   draw();
 };
 
-// tapping the month name jumps back to this month
 $('#cm').onclick = () => {
   Y = today.getFullYear();
   M = today.getMonth();
   draw();
 };
 
-// tapping a heart opens that day's photo
 $('#grid').onclick = e => {
   const b = e.target.closest('.h');
   if (!b) return;
@@ -546,7 +493,7 @@ $('#grid').onclick = e => {
 draw();
 
 
-/* ---------- instagram card when the mouse is over an avatar ---------- */
+/* ---------- instagram card ---------- */
 const IGLOGO = `<svg class="ig-logo" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16.8" cy="7.2" r="1.1" fill="currentColor"/></svg>`;
 
 document.querySelectorAll('.who[data-ig]').forEach(who => {
@@ -571,7 +518,6 @@ document.querySelectorAll('.who[data-ig]').forEach(who => {
   const card = who.querySelector('.ig'),
         link = who.querySelector('.ig-btn');
 
-  // keep the card inside the screen; its little arrow keeps pointing at the name
   const fit = () => {
     const r = who.getBoundingClientRect(),
           cx = r.left + r.width / 2,
@@ -584,7 +530,6 @@ document.querySelectorAll('.who[data-ig]').forEach(who => {
   who.addEventListener('pointerenter', fit);
   who.addEventListener('focusin', fit);
 
-  // clicking "View profile": the card closes by itself and stays closed until the mouse leaves
   link.addEventListener('click', () => {
     who.classList.add('shut');
     who.classList.remove('open');
@@ -592,7 +537,6 @@ document.querySelectorAll('.who[data-ig]').forEach(who => {
   });
   who.addEventListener('pointerleave', () => who.classList.remove('shut'));
 
-  // phones have no hover: tap the avatar instead
   if (matchMedia('(hover:none)').matches) {
     who.addEventListener('click', e => {
       if (e.target.closest('a')) return;
@@ -608,26 +552,19 @@ if (matchMedia('(hover:none)').matches) {
 }
 
 
-/* ---------- lavender wallpaper (little drawn cats, bows, stars) ---------- */
-const CATG = `<g class="tail"><path d="M20 60Q2 58 8 38" fill="none" style="stroke-width:11"/><path d="M20 60Q2 58 8 38" fill="none" style="stroke:var(--c);stroke-width:4.5"/></g>
-<ellipse class="c f1" cx="40" cy="78" rx="9" ry="6"/><ellipse class="c f2" cx="66" cy="78" rx="9" ry="6"/>
-<ellipse class="c" cx="48" cy="58" rx="34" ry="21"/><ellipse class="m" cx="36" cy="52" rx="11" ry="8"/>
-<path class="c" d="M54 46L58 21 75 33Q80 32 85 33L102 21 106 46Q108 68 80 69 52 68 54 46Z"/>
-<ellipse class="e" cx="70" cy="50" rx="2.8" ry="3.2"/><ellipse class="e" cx="91" cy="50" rx="2.8" ry="3.2"/>
-<ellipse class="k" cx="63" cy="58" rx="5" ry="3.5"/><ellipse class="k" cx="98" cy="58" rx="5" ry="3.5"/>
-<path d="M76 56q2 3 4 0q2 3 4 0M56 52l-9-2M56 58l-9 3M104 52l9-2M104 58l9 3" fill="none" style="stroke-width:2.2"/>`;
+/* ---------- Wallpaper (Heart shape replacing tiny background cat) ---------- */
+const BG_HEART = `<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#fff" stroke="#c3b2ea" stroke-width="2" stroke-linejoin="round"/>`;
 
-// wallpaper pieces: at(x, y, size, rotation, shape)
 const at = (x, y, s, r, g) => `<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})">${g}</g>`;
 
-const BC = `<g class="cat bgc" style="--c:#fff;--p:#e6dcf7">${CATG}</g>`;
+const BC = `<g>${BG_HEART}</g>`;
 const BOW = `<path d="M0 0C-8-9-20-8-19 1-18 9-8 6 0 1 8 6 18 9 19 1 20-8 8-9 0 0ZM-1 2L-8 14M1 2L8 14" fill="#f1eafc" stroke="#bfaae8" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/><circle cy="1" r="2.8" fill="#d9ccf4" stroke="#bfaae8" stroke-width="1.2"/>`;
 const STAR = `<path d="M0-8L2.4-2.6 8-2.4 3.6 1.2 5 7 0 3.6-5 7-3.6 1.2-8-2.4-2.4-2.6Z" fill="#fff" stroke="#cdbdf0" stroke-linejoin="round"/>`;
 
 document.body.insertAdjacentHTML('afterbegin',
   `<svg class="bg" aria-hidden="true"><defs><pattern id="pt" width="300" height="340" patternUnits="userSpaceOnUse">` +
-  // small background cats
-  at(24, 50, .55, 0, BC) + at(236, 196, '-.5 .5', 0, BC) + at(34, 268, .45, 0, BC) +
+  // background hearts (replaced tiny cats)
+  at(24, 50, .8, 0, BC) + at(236, 196, .7, 0, BC) + at(34, 268, .75, 0, BC) +
   // bows
   at(170, 50, 1, -12, BOW) + at(60, 178, 1, 14, BOW) + at(236, 300, .9, -8, BOW) + at(130, 250, .8, 10, BOW) +
   // stars
@@ -638,22 +575,19 @@ document.body.insertAdjacentHTML('afterbegin',
 );
 
 
-/* ---------- cat stickers: a fixed, wobbling layer scattered over the whole background ---------- */
-// white backgrounds vanish thanks to mix-blend-mode in style.css; if x.png is missing it tries x.jpg
+/* ---------- cat stickers (Stay still - wobble removed) ---------- */
 const stk = document.createElement('div');
 stk.id = 'stk';
 stk.setAttribute('aria-hidden', 'true');
 document.body.append(stk);
 
-const rnd = n => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };   // steady "random" numbers
+const rnd = n => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
 
 const pics = STICKER_FILES.map((file, i) => {
   const im = new Image();
   let tried = 0;
   im.className = 'st';
   im.alt = '';
-  im.style.setProperty('--d', (3.2 + i % 4 * .45) + 's');
-  im.style.setProperty('--l', (-i * .53) + 's');
   im.style.setProperty('--r', (rnd(i + 5) * 16 - 8) + 'deg');
   im.onerror = () => { if (tried++) { im.remove(); scatter(); } else im.src = 'stickers/' + file.replace(/\.\w+$/, '.jpg'); };
   im.src = 'stickers/' + file;
@@ -661,7 +595,6 @@ const pics = STICKER_FILES.map((file, i) => {
   return im;
 });
 
-// spread the stickers over a loose grid that covers the screen (fewer on phones)
 function scatter() {
   const W = innerWidth,
         H = innerHeight,
@@ -684,7 +617,7 @@ function scatter() {
     im.style.left = cx + 'px';
     im.style.top = cy + 'px';
     im.style.setProperty('--w', Math.max(56, Math.min(230, Math.min(cw, ch) * .8 * scale)) + 'px');
-    im.style.opacity = !phone && Math.abs(cx - W / 2) < 250 ? .5 : .95;   // softer behind the middle of the page
+    im.style.opacity = !phone && Math.abs(cx - W / 2) < 250 ? .5 : .95;
   });
 }
 scatter();
@@ -692,10 +625,8 @@ addEventListener('resize', scatter);
 
 
 /* ---------- monthsary / anniversary popup ---------- */
-// ordinal numbers: 1st, 2nd, 3rd, 13th ...
 const ord = n => { const s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
 
-// is there a monthsary / anniversary today, or within the last (days - 1) days?
 function celebration(date) {
   for (let back = 0; back < CELEBRATE.days; back++) {
     const d = new Date(date.getFullYear(), date.getMonth(), date.getDate() - back);
@@ -732,7 +663,7 @@ function celebrate(c) {
         unit = anniv ? 'year' : 'month',
         name = anniv ? 'anniversary' : 'monthsary';
 
-  let k = 0;                                           // letters bounce one after another, words never split
+  let k = 0;
   const words = title.split(' ').map(w => `<span class="word">${[...w].map(ch => `<span style="--i:${k++}">${ch}</span>`).join('')}</span>`).join(' ');
 
   show(`
@@ -748,7 +679,7 @@ function celebrate(c) {
 }
 
 function checkCelebration() {
-  const demo = new URLSearchParams(location.search).get('celebrate');      // index.html?celebrate=anniversary
+  const demo = new URLSearchParams(location.search).get('celebrate');
   const c = demo
     ? { type: demo === 'anniversary' ? 'anniversary' : 'monthsary', n: demo === 'anniversary' ? 1 : 3 }
     : celebration(today);
@@ -757,7 +688,7 @@ function checkCelebration() {
 setTimeout(checkCelebration, 900);
 
 
-/* ---------- after midnight: new date, new day count, fresh calendar ---------- */
+/* ---------- midnight refresh ---------- */
 const msToMidnight = () => {
   const n = new Date();
   return new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1) - n + 500;
