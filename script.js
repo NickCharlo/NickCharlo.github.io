@@ -12,7 +12,6 @@ document.addEventListener('dblclick', e => {
 
 /* ---------- Theme Switcher ---------- */
 const themes = ['', 'peach', 'midnight'];
-const themeNames = ['Lavender', 'Peach', 'Midnight'];
 const themeBtn = $('#themeToggle');
 
 let currentThemeIndex = localStorage.getItem('site_theme_idx') ? parseInt(localStorage.getItem('site_theme_idx')) : 0;
@@ -75,7 +74,7 @@ const CELEBRATE = {
   days: 3,
   monthsary: "Happy Monthsary!",
   anniversary: "Happy Anniversary!",
-  sticker: ""
+  sticker: "2.png"
 };
 
 /* ===================================================================== */
@@ -450,7 +449,7 @@ function setCount(c) {
 
 function draw() {
   const g = ++gen;
-  $('#cm').textContent = `${MN[M]}${Y}`;
+  $('#cm').textContent = `${MN[M]} ${Y}`;
 
   let h = "SMTWTFS".split('').map(x => `<div class="wd">${x}</div>`).join('')
         + '<i></i>'.repeat(new Date(Y, M, 1).getDay());
@@ -503,7 +502,7 @@ $('#grid').onclick = e => {
         p = PHOTOS[k] || {},
         src = p.src || PHOTO_FOLDER + k + '.jpg',
         [y, m, d] = k.split('-'),
-        lbl = `${MN[m - 1]} ${+d},${y}`;
+        lbl = `${MN[m - 1]} ${+d}, ${y}`;
   show(`<div class="pc"><div class="ph"><span>📷 Photo for<br>${lbl}<br><small>${src}</small></span><img src="${src}" alt="Photo from ${lbl}" onerror="this.remove()"></div><p class="cap">${p.note || lbl}</p></div>`);
 };
 
@@ -524,7 +523,8 @@ document.querySelectorAll('.who[data-ig]').forEach(who => {
     <div class="ig">
       <div class="ig-head">
         <span class="ig-ring"><span class="ig-pic">${p.name[0]}${img ? `<img src="${img.getAttribute('src')}" alt="" onerror="this.remove()">` : ''}</span></span>
-        <div class="ig-id"><b>@${p.user}</b><small>${p.name}</small></div>${IGLOGO}
+        <div class="ig-id"><b>@${p.user}</b><small>${p.name}</small></div>
+        ${IGLOGO}
       </div>
       ${stats.length ? `<div class="ig-stats">${stats.map(s => `<span><b>${s[1]}</b>${s[0]}</span>`).join('')}</div>` : ''}
       ${p.bio ? `<p>${p.bio}</p>` : ''}
@@ -595,4 +595,51 @@ function startConfetti() {
   for (let i = 0; i < 46; i++) {
     const c = document.createElement('i');
     c.textContent = E[i % E.length];
-    c.style.cssText = `left:${Math.random() * 100}\%; font-size:${14 + Math.random() * 16}px; animation-duration:${3.5 + Math.random() * 3}s; animation-delay:${Math.random() *
+    c.style.cssText = `left:${Math.random() * 100}%; font-size:${14 + Math.random() * 16}px; animation-duration:${3.5 + Math.random() * 3}s; animation-delay:${Math.random() * 3}s; --sway:${(Math.random() - .5) * 120}px; --spin:${(Math.random() - .5) * 720}deg`;
+    confetti.append(c);
+  }
+  document.body.append(confetti);
+}
+
+function celebrate(c) {
+  const anniv = c.type === 'anniversary',
+        title = anniv ? CELEBRATE.anniversary : CELEBRATE.monthsary,
+        unit = anniv ? 'year' : 'month',
+        name = anniv ? 'anniversary' : 'monthsary';
+
+  let k = 0;
+  const words = title.split(' ').map(w => `<span class="word">${[...w].map(ch => `<span style="--i:${k++}">${ch}</span>`).join('')}</span>`).join(' ');
+
+  show(`
+    <div class="party">
+      ${CELEBRATE.sticker ? `<img class="party-cat" src="stickers/${CELEBRATE.sticker}" alt="" onerror="this.remove()">` : ''}
+      <div class="party-ribbon">${ord(c.n)} ${name}</div>
+      <h2>${words}</h2>
+      <p>${c.n} ${unit}${c.n > 1 ? 's' : ''} of loving each other</p>
+      <div class="party-hearts"><i>💗</i><i>💖</i><i>💗</i></div>
+      <small>Aurish &amp; Nick · ${days} days together</small>
+    </div>`, stopConfetti);
+  startConfetti();
+}
+
+function checkCelebration() {
+  const demo = new URLSearchParams(location.search).get('celebrate');
+  const c = demo
+    ? { type: demo === 'anniversary' ? 'anniversary' : 'monthsary', n: demo === 'anniversary' ? 1 : 3 }
+    : celebration(today);
+  if (c) celebrate(c);
+}
+setTimeout(checkCelebration, 900);
+
+
+/* ---------- midnight refresh ---------- */
+const msToMidnight = () => {
+  const n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1) - n + 500;
+};
+setTimeout(function midnight() {
+  refreshToday();
+  draw();
+  checkCelebration();
+  setTimeout(midnight, msToMidnight());
+}, msToMidnight());
