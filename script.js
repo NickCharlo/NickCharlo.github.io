@@ -38,7 +38,8 @@ const PHOTOS = {
    "2025-09-29": { src: "photos/2025-09-29.jpg", note: "School science fair awarding" },
   "2025-10-02": { src: "photos/2025-10-02.jpg", note: "First lunch together" },
   "2025-10-14": { src: "photos/2025-10-14.jpg", note: "First hug" },
-   "2025-10-09": { src: "photos/2025-10-19.jpg", note: "During division science fair" },
+   "2025-10-09": { src: "photos/2025-10-09.jpg", note: "During division science fair" },
+   "2025-10-08": { src: "photos/2025-10-08.jpg", note: "Became slightly clingy" },
 };
 
 // 3) LETTER -----------------------------------------------------------
