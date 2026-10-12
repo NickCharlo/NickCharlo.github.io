@@ -43,6 +43,8 @@ const PHOTOS = {
  "2025-10-03": { src: "photos/2025-10-03.jpg", note: "Mcdo date" },
   "2025-11-13": { src: "photos/2025-11-13.jpg", note: "Mcdo date again hehe" },
    "2026-03-09": { src: "photos/2026-03-09.jpg", note: "During drama play idunno maybe" },
+   "2026-03-06": { src: "photos/2026-03-06.jpg", note: "During training for her sports writing regional" },
+    "2026-03-16": { src: "photos/2026-03-16.jpg", note: "Pic after her 5 day from RSPC" },
 };
 
 // 3) LETTER -----------------------------------------------------------
