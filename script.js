@@ -35,7 +35,7 @@ const TRACKS = [
 const PHOTO_FOLDER = "photos/";
 const PHOTOS = {
   "2025-10-02": { src: "photos/2025-10-02.jpg", note: "First Lunch Together" },
-  "2025-10-14.jpg": { src: "photos/2025-10-14.jpg", note: "First Hug" },
+  "2025-10-14": { src: "photos/2025-10-14.jpg", note: "First Hug" },
   // "2025-12-25": { src: "photos/christmas.jpg",  note: "Our first Christmas" },
 };
 
