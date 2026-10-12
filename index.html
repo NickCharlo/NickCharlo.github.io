@@ -13,6 +13,9 @@
 </head>
 
 <body>
+  <!-- Theme Switcher Button -->
+  <button id="themeToggle" class="theme-btn" aria-label="Switch Theme">🎨</button>
+
   <main>
 
     <!-- ========== 1. DAYS RING ========== -->
@@ -33,7 +36,7 @@
       </div>
     </section>
 
-    <!-- ========== 2. AVATARS (pictures go in the "avatars" folder) ========== -->
+    <!-- ========== 2. AVATARS ========== -->
     <section class="pair">
       <div class="who" data-ig="aurish">
         <div class="av">A<img src="avatars/aurish.png" alt="" onerror="this.remove()"></div>
@@ -50,8 +53,13 @@
 
     <p class="since">Together since October 13, 2025</p>
 
-    <!-- ========== 3. ALBUM CALENDAR ========== -->
+    <!-- ========== 3. ALBUM CALENDAR (with 4 corner sticks) ========== -->
     <section class="album">
+      <div class="tape tl"></div>
+      <div class="tape tr"></div>
+      <div class="tape bl"></div>
+      <div class="tape br"></div>
+
       <h2>Our album</h2>
       <p class="cnt" id="cnt" aria-live="polite"></p>
 
@@ -141,7 +149,7 @@
     </div>
   </div>
 
-  <!-- popup used by the photo card and the A4 letter -->
+  <!-- Popup overlay -->
   <div id="ov"><div id="box"></div></div>
 
   <script src="js/script.js" onerror="var s=document.createElement('script');s.src='script.js';document.body.append(s)"></script>
