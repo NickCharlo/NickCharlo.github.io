@@ -6,10 +6,10 @@
   --lav: #d9d0f6;
   --plum: #6a4b8f;
   --ink: #4d3768;
-  --bg-grad: radial-gradient(circle at 18% 8%, #fff, transparent 42%),
-             radial-gradient(circle at 88% 55%, #fff, transparent 40%),
-             radial-gradient(#d3c4f0 .9px, transparent 1.4px) 0 0/8px 8px,
-             #efe7fb;
+  --bg-grad: radial-gradient(circle at 15% 10%, #fff6fa 0%, transparent 45%),
+             radial-gradient(circle at 85% 60%, #f4effc 0%, transparent 45%),
+             radial-gradient(#d3c4f0 1px, transparent 1.6px) 0 0/12px 12px,
+             linear-gradient(135deg, #fcebfa 0%, #efe7fb 100%);
   --card-bg: #ffffffd9;
 }
 
@@ -1172,12 +1172,12 @@ button:focus-visible {
   transform: rotate(-1.5deg);
 }
 
-/* Randomized Photo Popup Sticker (Small, static, slightly tilted left) */
+/* Randomized Photo Popup Sticker (Bigger but not too much - ~56px, static, slightly tilted left) */
 .popup-sticker {
   position: absolute;
-  top: -12px;
-  left: -10px;
-  width: 38px;
+  top: -16px;
+  left: -14px;
+  width: 56px;
   height: auto;
   z-index: 10;
   pointer-events: none;
@@ -1395,3 +1395,4 @@ button:focus-visible {
     transition-duration: .01s!important;
   }
 }
+
