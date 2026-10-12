@@ -135,13 +135,13 @@ main {
   text-shadow: 0 0 8px #fff, 0 0 3px #fff;
 }
 
-/* instagram card: appears when the mouse is over an avatar */
+/* instagram card: appears under the name when the mouse is over an avatar */
 .ig {
   position: absolute;
   top: 100%;
-  left: -20px;
-  width: 240px;
-  margin-top: 8px;
+  left: 50%;
+  width: min(224px, calc(100vw - 16px));
+  margin-top: 12px;
   padding: 14px;
   border-radius: 20px;
   background: #fff;
@@ -153,30 +153,45 @@ main {
   text-shadow: none;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(8px) scale(.96);
-  transform-origin: top left;
+  transform: translateX(calc(-50% + var(--shift, 0px))) translateY(8px) scale(.96);
+  transform-origin: top center;
   transition: opacity .2s, transform .2s, visibility 0s .2s;
   z-index: 40;
 }
-.who:last-child .ig {
-  left: auto;
-  right: -20px;
-  transform-origin: top right;
-}
-.ig::before {
+.ig::before {                         /* keeps the card open while the mouse travels from the name to it */
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  top: -14px;
-  height: 14px;
+  top: -16px;
+  height: 16px;
+}
+.ig::after {                          /* little arrow pointing at the name */
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: calc(50% - var(--shift, 0px));
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-left: 1px solid #f3dbe6;
+  border-top: 1px solid #f3dbe6;
+  border-top-left-radius: 3px;
+  transform: translateX(-50%) rotate(45deg);
 }
 .who:hover .ig,
 .who:focus-within .ig,
 .who.open .ig {
   opacity: 1;
   visibility: visible;
-  transform: none;
+  transform: translateX(calc(-50% + var(--shift, 0px)));
+  transition-delay: 0s;
+}
+/* after "View profile" is clicked the card closes and stays closed until the mouse leaves */
+.who.shut .ig {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(calc(-50% + var(--shift, 0px))) translateY(8px) scale(.96);
   transition-delay: 0s;
 }
 .ig-head {
@@ -303,6 +318,7 @@ main {
   gap: 4px;
 }
 .nav button {
+  position: relative;
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -339,6 +355,7 @@ main {
   padding-bottom: 4px;
 }
 .d {
+  position: relative;
   aspect-ratio: 1;
   border-radius: 14px;
   display: flex;
@@ -366,6 +383,88 @@ main {
 .h.on {
   color: #e9569a;
   text-shadow: 0 0 8px #f6a7c9;
+  animation: glow 3s ease-in-out infinite;
+  animation-delay: calc(var(--n, 0) * -.3s);
+}
+
+/* cues: which days of this month have a picture, and how many */
+.cnt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: max-content;
+  margin: 6px auto 0;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #f8eef9;
+  color: #9a6fb0;
+  font-size: .74rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .4s ease, transform .4s ease;
+}
+.cnt.show {
+  opacity: 1;
+  transform: none;
+}
+.cnt.none {
+  background: #f6f3f8;
+  color: #b7a7c4;
+}
+.cnt svg {
+  width: 14px;
+  height: 14px;
+}
+.cnt b {
+  display: inline-block;
+  color: #e9569a;
+  font-weight: 700;
+}
+.cnt.pop b {
+  animation: cntpop .5s ease;
+}
+.d.has {
+  background: linear-gradient(135deg, #fff3f8, #f5effc);
+}
+.d.has.t {
+  background: linear-gradient(135deg, #fbe3ec, #e6defa);
+}
+.d.has::after {                       /* tiny sparkle on days with a picture */
+  content: "✦";
+  position: absolute;
+  top: 3px;
+  right: 6px;
+  font-size: .5rem;
+  color: #f2a0c2;
+  animation: twinkle2 3s ease-in-out infinite;
+  animation-delay: calc(var(--n, 0) * -.3s);
+}
+.nav button.more::after {             /* soft dot: the next / previous month has pictures too */
+  content: "";
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f08bb0;
+  box-shadow: 0 0 0 2px #fff;
+  animation: softpulse 2.2s ease-in-out infinite;
+}
+@keyframes glow {
+  50% { text-shadow: 0 0 13px #f6a7c9; }
+}
+@keyframes twinkle2 {
+  0%, 100% { opacity: .25; transform: scale(.7) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.15) rotate(20deg); }
+}
+@keyframes softpulse {
+  50% { transform: scale(1.25); opacity: .7; }
+}
+@keyframes cntpop {
+  40% { transform: scale(1.35); }
 }
 button:focus-visible {
   outline: 2px solid var(--plum);
@@ -376,176 +475,6 @@ button:focus-visible {
   font-size: .8rem;
   color: #a48cc4;
   margin-top: 10px;
-}
-
-/* ==========================================================
-   TRAVEL LOG  ("our date map")
-   ========================================================== */
-.trip {
-  position: relative;
-  margin-top: 30px;
-  background: #ffffffd9;
-  border: 1px solid #f3dbe6;
-  border-radius: 28px;
-  padding: 20px 12px 16px;
-  box-shadow: 0 16px 40px #cdb9ea40;
-}
-.trip h2 {
-  font: italic 600 2rem 'Cormorant Garamond', serif;
-  text-align: center;
-  color: var(--plum);
-}
-.trip .sub {
-  margin: 2px 0 12px;
-  text-align: center;
-  font-size: .8rem;
-  color: #a48cc4;
-}
-.map {
-  position: relative;
-  overflow: hidden;
-  border-radius: 20px;
-  box-shadow: inset 0 0 0 1px #f3dbe6;
-  background:
-    linear-gradient(#f3e8f8 1px, transparent 1px) 0 0/28px 28px,
-    linear-gradient(90deg, #f3e8f8 1px, transparent 1px) 0 0/28px 28px,
-    linear-gradient(#fffdfd, #fbf6ff);
-}
-.map .empty {
-  padding: 40px 20px;
-  text-align: center;
-  font-size: .85rem;
-  color: #a48cc4;
-}
-.route-svg {
-  position: absolute;
-  inset: 0;
-}
-.blob {
-  opacity: .6;
-  filter: blur(18px);
-}
-.road-bg {
-  fill: none;
-  stroke: #fff;
-  stroke-width: 18;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: .95;
-}
-.road {
-  fill: none;
-  stroke: #f08bb0;
-  stroke-width: 3.2;
-  stroke-linecap: round;
-  stroke-dasharray: .1 10;
-  animation: crawl 1s linear infinite;
-}
-.compass-ring {
-  fill: #fff;
-  stroke: #d9c9ef;
-  stroke-width: 1.5;
-}
-.compass-needle {
-  fill: #f08bb0;
-}
-.compass-n {
-  fill: #a48cc4;
-  font: 700 8px Quicksand, sans-serif;
-  text-anchor: middle;
-}
-.stop {
-  position: absolute;
-  width: 40px;
-  height: 54px;
-  margin: -52px 0 0 -20px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  opacity: 0;
-  transform-origin: 50% 100%;
-}
-.go .stop {
-  animation: drop .7s cubic-bezier(.3, 1.6, .5, 1) both;
-  animation-delay: calc(var(--i) * .22s);
-}
-.pin {
-  display: block;
-  width: 40px;
-  height: 54px;
-  overflow: visible;
-  filter: drop-shadow(0 4px 4px #b57a9a66);
-  transition: transform .2s;
-}
-.pin path {
-  fill: #f08bb0;
-  transition: fill .2s;
-}
-.pin circle {
-  fill: #fff;
-}
-.stop:hover .pin {
-  transform: translateY(-3px) scale(1.08);
-}
-.stop:hover .pin path {
-  fill: #e9569a;
-}
-.emo {
-  position: absolute;
-  top: 10px;
-  left: 0;
-  right: 0;
-  font-style: normal;
-  font-size: 17px;
-  line-height: 1;
-  text-align: center;
-}
-.lbl {
-  position: absolute;
-  top: 8px;
-  width: max-content;
-  max-width: min(150px, 38vw);
-  line-height: 1.25;
-  pointer-events: none;
-}
-.stop.L .lbl {
-  left: calc(100% + 6px);
-  text-align: left;
-}
-.stop.R .lbl {
-  right: calc(100% + 6px);
-  text-align: right;
-}
-.lbl b {
-  display: block;
-  font-size: .86rem;
-  color: var(--ink);
-  text-shadow: 0 0 6px #fff, 0 0 3px #fff;
-}
-.lbl small {
-  display: block;
-  font-size: .68rem;
-  color: #a48cc4;
-  text-shadow: 0 0 6px #fff;
-}
-.stop.next .pin path {
-  fill: #fff;
-  stroke: #f08bb0;
-  stroke-width: 2;
-  stroke-dasharray: 4 3;
-}
-.stop.next .emo {
-  color: #f08bb0;
-  font-weight: 700;
-}
-@keyframes crawl {
-  to { stroke-dashoffset: -10.1; }
-}
-@keyframes drop {
-  from { opacity: 0; transform: translateY(-30px) scale(.4, 1.4); }
-  60% { opacity: 1; transform: translateY(0) scale(1.15, .85); }
-  to { opacity: 1; transform: none; }
 }
 
 /* ==========================================================
@@ -1248,25 +1177,6 @@ button:focus-visible {
   font: 500 1.4rem Caveat, cursive;
   margin-top: 10px;
   color: var(--plum);
-}
-.pc.place .ph {
-  aspect-ratio: 4/3;
-}
-.pc .big {
-  font-size: 3rem;
-  font-style: normal;
-  line-height: 1.2;
-}
-.pdate {
-  margin-top: 2px;
-  font-size: .78rem;
-  color: #a48cc4;
-}
-.pnote {
-  margin: 8px 6px 0;
-  font-size: .88rem;
-  line-height: 1.45;
-  color: #6b5a7e;
 }
 .a4 {
   height: min(92vh, calc(92vw*1.414), 780px);
