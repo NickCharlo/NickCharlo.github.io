@@ -374,7 +374,7 @@ main {
 .stk-bow    { left: -17px;  top: -40px;    width: 108px; transform: rotate(-4deg); }
 .stk-heart  { right: -18px; top: -32px;    width: 95px;  transform: rotate(4deg); }
 .stk-flower { left: -12px;  bottom: -33px; width: 110px; }
-.stk-ribbon { right: -8px;  bottom: -38px; width: 72px; }
+.stk-spark { right: -8px;  bottom: -38px; width: 72px; }
 
 .album h2 {
   font: italic 600 2rem 'Cormorant Garamond', serif;
