@@ -67,9 +67,9 @@ const LETTER = {
   body: [
     "Hiii loveee Happy, 1st Anniversaryyy!!.",
     "thankk uu so much for all",
-    "it was really tough times nga dili us magkasinabtanay, we argue lots"
-    "yet im really greatful na we still forgive each other and came this far na<3"
-    "let's do our very best lovee na we will achieve our goals in life!!!"
+    "it was really tough times nga dili us magkasinabtanay, we argue lots",
+    "yet im really greatful na we still forgive each other and came this far na<3",
+    "let's do our very best lovee na we will achieve our goals in life!!!",
     "study well and all!!! I will always support u loveee<3 I LOVE YOUUU!!!"
   ]
 };
