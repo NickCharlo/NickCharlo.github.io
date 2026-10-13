@@ -65,6 +65,7 @@ const INSTAGRAM = {
 };
 
 // 6) CELEBRATION ------------------------------------------------------
+// 6) CELEBRATION ------------------------------------------------------
 const CELEBRATE = {
   days: 3,
   monthsary: "Happy Monthsary!",
