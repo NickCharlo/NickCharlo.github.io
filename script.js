@@ -36,6 +36,17 @@ addEventListener('keydown', e => {
 
 // 1) MUSIC ------------------------------------------------------------
 const TRACKS = [
+  { title: "Enchanted",          artist: "Taylor Swift", url: "music/Taylor Swift - Enchanted (Taylor's Version) (Lyric Video).mp3", cover: "music/enchanted.png" },
+  { title: "Iris",   artist: " Goo Goo Dolls",   url: "music/Iris.mp3", cover: "music/iriscover.png" },
+  { title: "Mine", artist: "Taylor Swift",   url: "music/Taylor Swift - Mine.mp3", cover: "music/enchanted.png" },
+   { title: "Neighbourhood", artist: "Taylor Swift",   url: "music/Reflections.mp3", cover: "music/neighbourhood.png" },
+    { title: "Everything I Do", artist: "Bryan Adams",   url: "music/Everything I do.mp3", cover: "music/bryan adams.png" },
+    { title: "The Way I Loved You", artist: "Taylor Swift",   url: "music/Taylor Swift - The Way I Loved You (Taylor's Version) (Lyric Video).mp3", cover: "music/enchanted.png" }
+];
+
+// 2) PHOTOS -----------------------------------------------------------
+const PHOTO_FOLDER = "photos/";
+const PHOTOS = {
   "2024-10-04": { src: "photos/2024-10-04.jpg", note: "When we were complete strangers" },
    "2025-09-29": { src: "photos/2025-09-29.jpg", note: "School science fair awarding" },
   "2025-10-02": { src: "photos/2025-10-02.jpg", note: "First lunch together" },
@@ -47,20 +58,14 @@ const TRACKS = [
    "2026-03-09": { src: "photos/2026-03-09.jpg", note: "During drama play idunno maybe" },
    "2026-03-06": { src: "photos/2026-03-06.jpg", note: "During training for her sports writing regional" },
     "2026-03-16": { src: "photos/2026-03-16.jpg", note: "Pic after her 5 day from RSPC" },
-];
-
-// 2) PHOTOS -----------------------------------------------------------
-const PHOTO_FOLDER = "photos/";
-const PHOTOS = {
-  "2025-10-13": { src: "photos/2025-10-13.jpg", note: "The day it all began 💜" },
 };
 
 // 3) LETTER -----------------------------------------------------------
 const LETTER = {
-  to: "My love,",
-  from: "Aurish",
+  to: "My love, Aurish.",
+  from: "Nick",
   body: [
-    "Every day with you feels softer, brighter, and a little more like home.",
+    "Hiii loveee Happy 1st Anniversaryyy!!.",
     "Thank you for the quiet mornings, the silly jokes, and for choosing me again and again.",
     "Replace these words with your own. I’m so glad it’s you."
   ]
