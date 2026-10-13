@@ -68,8 +68,8 @@ const LETTER = {
 
 // 4) INSTAGRAM --------------------------------------------------------
 const INSTAGRAM = {
-  aurish: { user: "aurish", name: "Aurish", bio: "Your bio here ✨", posts: "", followers: "", following: "" },
-  nick:   { user: "nick",   name: "Nick",   bio: "Your bio here ✨", posts: "", followers: "", following: "" }
+  aurish: { user: "mixed_in_the_stars02", name: "mixed_in_the_stars02", bio: "Cutie pie ✨", posts: "", followers: "", following: "" },
+  nick:   { user: "nickcharlo",   name: "nickcharlo",   bio: "The one who made this ✨", posts: "", followers: "", following: "" }
 };
 
 // 6) CELEBRATION ------------------------------------------------------
