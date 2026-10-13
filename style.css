@@ -1518,7 +1518,155 @@ button:focus-visible {
   0% { box-shadow: 0 0 0 0 #e9a9d18c; }
   100% { box-shadow: 0 0 0 13px #e9a9d100; }
 }
+/* ==========================================================
+   SCENERY  (richer white / pink / lavender + gentle motion)
+   ========================================================== */
+:root {
+  --card-bg: #fffafde6;                 /* slightly glassy so the scenery peeks through */
+}
 
+.bg-fixed {
+  background:
+    radial-gradient(60vmax 50vmax at 12% 8%, #ffe9f4 0, #fff0 70%),
+    radial-gradient(60vmax 50vmax at 92% 30%, #eadcff 0, #fff0 70%),
+    linear-gradient(160deg, #fff7fc 0%, #ffe6f2 34%, #f1e4ff 68%, #e3d3fa 100%);
+}
+
+/* drifting colour clouds */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.b1 { width: 70vmax; height: 70vmax; left: -25vmax;  top: -22vmax;    background: radial-gradient(circle, #ffc9e2cc 0, #ffc9e200 66%); animation: driftA 26s ease-in-out infinite alternate; }
+.b2 { width: 64vmax; height: 64vmax; right: -26vmax; top: 6vh;        background: radial-gradient(circle, #d5c0ffbb 0, #d5c0ff00 66%); animation: driftB 30s ease-in-out infinite alternate; }
+.b3 { width: 60vmax; height: 60vmax; left: -14vmax;  bottom: -30vmax; background: radial-gradient(circle, #ffbddb99 0, #ffbddb00 66%); animation: driftB 34s ease-in-out infinite alternate-reverse; }
+.b4 { width: 56vmax; height: 56vmax; right: -12vmax; bottom: -26vmax; background: radial-gradient(circle, #c7b0f5aa 0, #c7b0f500 66%); animation: driftA 28s ease-in-out infinite alternate-reverse; }
+@keyframes driftA { to { translate: 9vw 6vh;   scale: 1.12; } }
+@keyframes driftB { to { translate: -8vw -7vh; scale: 1.15; } }
+
+/* stardust */
+.stars {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  animation: twink 3.4s ease-in-out infinite alternate;
+}
+.stars.s2 {
+  animation-duration: 5.2s;
+  animation-delay: -2s;
+}
+@keyframes twink {
+  from { opacity: .2; }
+  to { opacity: 1; }
+}
+
+/* floating hearts / sparkles / bubbles */
+.floaties {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.fl {
+  position: absolute;
+  bottom: -60px;
+  opacity: 0;
+  animation-name: rise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.fl.h,
+.fl.s {
+  fill: currentColor;
+  fill-opacity: .4;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.fl.s {
+  animation-name: rise, twinkleS;
+  animation-timing-function: linear, ease-in-out;
+  animation-direction: normal, alternate;
+}
+.fl.b {
+  border-radius: 50%;
+  border: 1px solid #ffffffb0;
+  background: radial-gradient(circle at 30% 28%, #fff 0 12%, #ffffff55 13%, #f9cfe5aa 55%, #cdb8f580 100%);
+  box-shadow: inset 0 0 6px #fff9, 0 2px 8px #c9a6e533;
+}
+@keyframes rise {
+  0%   { transform: translate3d(0, 0, 0) rotate(0); opacity: 0; }
+  10%  { opacity: var(--o, .8); }
+  85%  { opacity: var(--o, .8); }
+  100% { transform: translate3d(var(--dx), -118vh, 0) rotate(var(--rot)); opacity: 0; }
+}
+@keyframes twinkleS {
+  to { scale: .55; }
+}
+
+/* edge waves breathe, background icons bob + glow */
+.wave { animation: breathe 9s ease-in-out infinite alternate; }
+.wave-r { animation-delay: -4s; }
+@keyframes breathe { to { scale: 1.22 1; } }
+
+.dc {
+  filter: drop-shadow(0 0 5px #ffffffcc);
+  animation: bob 7s ease-in-out infinite alternate;
+}
+.d2, .d5, .d7 { animation-name: bob2; animation-duration: 5s; }
+.d1 { color: #f5bcd8; animation-delay: -1s; }
+.d2 { color: #f2b2d1; }
+.d3 { color: #e7a3cb; animation-delay: -2.5s; }
+.d4 { color: #f4bad7; animation-delay: -4s; }
+.d5 { color: #cdb6f5; animation-delay: -1.5s; }
+.d6 { color: #c3a9f1; animation-delay: -3s; }
+.d7 { color: #d8c6f7; animation-delay: -2s; }
+.d8 { color: #c6aaf1; animation-delay: -5s; }
+@keyframes bob {
+  from { translate: 0 0; rotate: -7deg; }
+  to { translate: 0 -14px; rotate: 7deg; }
+}
+@keyframes bob2 {
+  from { translate: 0 0; rotate: 0deg; scale: .85; opacity: .7; }
+  to { translate: 4px -10px; rotate: 20deg; scale: 1.12; opacity: 1; }
+}
+
+/* days ring: glowing + orbiting sparkles */
+.ring { animation: ringglow 4.5s ease-in-out infinite alternate; }
+@keyframes ringglow {
+  from { filter: drop-shadow(0 6px 12px #e6a5cb59); }
+  to { filter: drop-shadow(0 8px 24px #c9a6f0a0); }
+}
+.orbit {
+  position: absolute;
+  inset: -4px;
+  pointer-events: none;
+  animation: orbit 22s linear infinite;
+}
+.orbit .o {
+  position: absolute;
+  inset: 0;
+}
+.orbit svg {
+  position: absolute;
+  left: calc(50% - 9px);
+  top: 4px;
+  width: 18px;
+  height: 18px;
+  fill: #fff;
+  fill-opacity: .75;
+  stroke: #e88fbb;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px #f6a7c9);
+}
+.orbit .oh { stroke: #b79df0; }
+@keyframes orbit { to { rotate: 360deg; } }
 /* ==========================================================
    MOBILE
    ========================================================== */
