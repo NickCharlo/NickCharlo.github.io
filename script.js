@@ -519,7 +519,7 @@ $('#grid').onclick = e => {
         [y, m, d] = k.split('-'),
         lbl = `${MN[m - 1]} ${+d}, ${y}`;
   // <img class="pc-st"> is the heart sticker slot on the photo card (stickers/photo-heart.png)
-  show(`<div class="pc"><img class="pc-st" src="stickers/photo-heart.png" alt="" onerror="this.remove()"><div class="ph"><span>📷 Photo for<br>${lbl}<br><small>${src}</small></span><img src="${src}" alt="Photo from ${lbl}" onerror="this.remove()"></div><p class="cap">${p.note || lbl}</p></div>`);
+  show(`<div class="pc"><img class="pc-st" src="stickers/heart.png" alt="" onerror="this.remove()"><div class="ph"><span>📷 Photo for<br>${lbl}<br><small>${src}</small></span><img src="${src}" alt="Photo from ${lbl}" onerror="this.remove()"></div><p class="cap">${p.note || lbl}</p></div>`);
 };
 
 draw();
