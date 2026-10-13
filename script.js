@@ -36,9 +36,17 @@ addEventListener('keydown', e => {
 
 // 1) MUSIC ------------------------------------------------------------
 const TRACKS = [
-  { title: "Our Song",         artist: "Aurish & Nick", url: "", cover: "music/cover1.jpg" },
-  { title: "Song number two",    artist: "Artist name",   url: "", cover: "music/cover2.jpg" },
-  { title: "Song number three", artist: "Artist name",   url: "", cover: "music/cover3.jpg" }
+  "2024-10-04": { src: "photos/2024-10-04.jpg", note: "When we were complete strangers" },
+   "2025-09-29": { src: "photos/2025-09-29.jpg", note: "School science fair awarding" },
+  "2025-10-02": { src: "photos/2025-10-02.jpg", note: "First lunch together" },
+  "2025-10-14": { src: "photos/2025-10-14.jpg", note: "First hug" },
+   "2025-10-09": { src: "photos/2025-10-09.jpg", note: "During division science fair" },
+   "2025-10-08": { src: "photos/2025-10-08.jpg", note: "Became slightly clingy" },
+ "2025-10-03": { src: "photos/2025-10-03.jpg", note: "Mcdo date" },
+  "2025-11-13": { src: "photos/2025-11-13.jpg", note: "Mcdo date again hehe" },
+   "2026-03-09": { src: "photos/2026-03-09.jpg", note: "During drama play idunno maybe" },
+   "2026-03-06": { src: "photos/2026-03-06.jpg", note: "During training for her sports writing regional" },
+    "2026-03-16": { src: "photos/2026-03-16.jpg", note: "Pic after her 5 day from RSPC" },
 ];
 
 // 2) PHOTOS -----------------------------------------------------------
