@@ -5,7 +5,7 @@
 const START = new Date(2025, 9, 13);   // anniversary 10/13/2025  (months start at 0, so 9 = October)
 const $ = s => document.querySelector(s);
 
-/* ---------- Anti-zooming (NEW: stronger) ---------- */
+/* ---------- Anti-zooming ---------- */
 const noZoom = e => e.preventDefault();
 
 // double click / double tap
@@ -69,7 +69,10 @@ const CELEBRATE = {
   days: 3,
   monthsary: "Happy Monthsary!",
   anniversary: "Happy Anniversary!",
-  sticker: "2.png"
+  sticker: "2.png",
+  voice: "voice/message.mp3",   // put your recording in a /voice folder (.mp3 or .m4a) or use a direct link
+  voiceTitle: "Voice message",
+  voiceHint: "Tap to play our special message"
 };
 
 /* ===================================================================== */
@@ -202,7 +205,7 @@ let shownAt = 0,
     onHide = null;
 
 const show = (h, cb) => {
-  box.innerHTML = h + '<button class="x" aria-label="Close">×</button>';   // NEW: × glyph
+  box.innerHTML = h + '<button class="x" aria-label="Close">×</button>';
   ov.classList.add('show');
   shownAt = Date.now();
   onHide = cb || null;
@@ -276,7 +279,7 @@ function load(i, go) {
 
   $('#tt').textContent = t.title || 'Untitled';
   $('#ta').textContent = t.artist || '';
-  $('#hint').textContent = t.url ? '' : "Add this song's link in the playlist, then press play.";   // NEW text
+  $('#hint').textContent = t.url ? '' : "Add this song's link in the playlist, then press play.";
   cv.hidden = 1;
   cv.alt = t.title;
   if (t.cover) cv.src = t.cover;
@@ -498,7 +501,7 @@ $('#grid').onclick = e => {
         src = p.src || PHOTO_FOLDER + k + '.jpg',
         [y, m, d] = k.split('-'),
         lbl = `${MN[m - 1]} ${+d}, ${y}`;
-  // NEW: <img class="pc-st"> is the heart sticker slot on the photo card (stickers/photo-heart.png)
+  // <img class="pc-st"> is the heart sticker slot on the photo card (stickers/photo-heart.png)
   show(`<div class="pc"><img class="pc-st" src="stickers/photo-heart.png" alt="" onerror="this.remove()"><div class="ph"><span>📷 Photo for<br>${lbl}<br><small>${src}</small></span><img src="${src}" alt="Photo from ${lbl}" onerror="this.remove()"></div><p class="cap">${p.note || lbl}</p></div>`);
 };
 
@@ -578,6 +581,7 @@ function celebration(date) {
   return null;
 }
 
+/* ----- confetti: white dots + pink / lavender paper bits ----- */
 let confetti = null;
 function stopConfetti() {
   if (confetti) confetti.remove();
@@ -587,24 +591,93 @@ function startConfetti() {
   stopConfetti();
   confetti = document.createElement('div');
   confetti.className = 'confetti';
-  const E = ['💗', '🌸', '✨', '🎀', '💜', '🦋', '💖', '⭐'];
-  for (let i = 0; i < 46; i++) {
-    const c = document.createElement('i');
-    c.textContent = E[i % E.length];
-    c.style.cssText = `left:${Math.random() * 100}%; font-size:${14 + Math.random() * 16}px; animation-duration:${3.5 + Math.random() * 3}s; animation-delay:${Math.random() * 3}s; --sway:${(Math.random() - .5) * 120}px; --spin:${(Math.random() - .5) * 720}deg`;
+
+  const DOTS = ['#ffffff', '#ffffff', '#ffffff', '#ffe6f1'];
+  const BITS = ['#ffffff', '#fbc9de', '#f59cc2', '#f3b6d6', '#d4c1f6', '#bda4ef', '#c9b6f3', '#a98be6'];
+  const pick = a => a[Math.random() * a.length | 0];
+
+  for (let i = 0; i < 72; i++) {
+    const c = document.createElement('i'),
+          dot = Math.random() < .34,
+          w = dot ? 4 + Math.random() * 4 : 6 + Math.random() * 5,
+          h = dot ? w : w * (1.5 + Math.random() * .8),
+          dur = 4.5 + Math.random() * 4.5;
+
+    c.className = dot ? 'dot' : 'bit';
+    c.style.cssText =
+      `left:${Math.random() * 100}%; width:${w}px; height:${h}px; background:${pick(dot ? DOTS : BITS)};` +
+      `animation-duration:${dur}s, ${.8 + Math.random() * .9}s;` +
+      `animation-delay:${-Math.random() * dur}s, ${-Math.random()}s;` +
+      `--sway:${(Math.random() - .5) * 170}px; --spin:${(Math.random() < .5 ? -1 : 1) * (240 + Math.random() * 600)}deg`;
     confetti.append(c);
   }
   document.body.append(confetti);
 }
 
+/* ----- voice message player (inside the popup) ----- */
+function setupVoice() {
+  const vm = box.querySelector('.vm');
+  if (!vm) return () => {};
+
+  const hint = vm.querySelector('small'),
+        idle = hint.textContent,
+        url = CELEBRATE.voice,
+        v = new Audio();
+  let musicWasOn = false;
+
+  v.preload = 'metadata';
+  if (url && !NOPE.test(url)) v.src = direct(url);
+
+  const resumeMusic = () => {
+    if (musicWasOn) { musicWasOn = false; au.play().catch(() => {}); }
+  };
+
+  const tickV = () => {
+    const d = v.duration, c = v.currentTime;
+    hint.textContent = d ? `${f(c)} / ${f(d)}` : f(c);
+    vm.style.setProperty('--p', (d ? c / d * 100 : 0) + '%');
+  };
+
+  v.ontimeupdate = v.onloadedmetadata = tickV;
+  v.onplay  = () => vm.classList.add('playing', 'on');
+  v.onpause = () => vm.classList.remove('playing');
+  v.onended = () => {
+    vm.classList.remove('on');
+    vm.style.setProperty('--p', '0%');
+    hint.textContent = idle;
+    resumeMusic();
+  };
+  v.onerror = () => { if (v.getAttribute('src')) hint.textContent = "Couldn't load the voice file"; };
+
+  vm.onclick = () => {
+    if (!url) { hint.textContent = 'Add your file in CELEBRATE.voice'; return; }
+    if (NOPE.test(url)) { hint.textContent = 'Use a direct .mp3 link'; return; }
+    if (v.paused) {
+      musicWasOn = musicWasOn || !au.paused;      // pause the song while the message plays
+      au.pause();
+      v.play().catch(() => { hint.textContent = 'Tap again to play'; });
+    } else {
+      v.pause();
+    }
+  };
+
+  return () => { v.pause(); v.removeAttribute('src'); v.load(); resumeMusic(); };
+}
+
+/* ----- the popup ----- */
 function celebrate(c) {
   const anniv = c.type === 'anniversary',
         title = anniv ? CELEBRATE.anniversary : CELEBRATE.monthsary,
         unit = anniv ? 'year' : 'month',
-        name = anniv ? 'anniversary' : 'monthsary';
+        name = anniv ? 'anniversary' : 'monthsary',
+        vTitle = CELEBRATE.voiceTitle || 'Voice message',
+        vHint = CELEBRATE.voiceHint || 'Tap to play our special message';
 
   let k = 0;
   const words = title.split(' ').map(w => `<span class="word">${[...w].map(ch => `<span style="--i:${k++}">${ch}</span>`).join('')}</span>`).join(' ');
+  const heart = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-heart"/></svg>';
+
+  let stopVoice = () => {};
 
   show(`
     <div class="party">
@@ -612,9 +685,22 @@ function celebrate(c) {
       <div class="party-ribbon">${ord(c.n)} ${name}</div>
       <h2>${words}</h2>
       <p>${c.n} ${unit}${c.n > 1 ? 's' : ''} of loving each other</p>
-      <div class="party-hearts"><i>💗</i><i>💖</i><i>💗</i></div>
-      <small>Aurish &amp; Nick · ${days} days together</small>
-    </div>`, stopConfetti);
+
+      <button class="vm" type="button" aria-label="Play voice message">
+        <span class="vm-btn">
+          <svg class="vm-pl" viewBox="0 0 24 24"><polygon points="8 5 19 12 8 19"/></svg>
+          <svg class="vm-pa" viewBox="0 0 24 24"><rect x="6.5" y="5" width="4" height="14" rx="1.3"/><rect x="13.5" y="5" width="4" height="14" rx="1.3"/></svg>
+        </span>
+        <span class="vm-t"><b>${vTitle}</b><small>${vHint}</small></span>
+        <span class="vm-bar"><i></i></span>
+      </button>
+
+      <div class="party-hearts">${heart}${heart}${heart}</div>
+      <small class="party-foot">Aurish &amp; Nick · ${days} days together</small>
+    </div>`,
+    () => { stopConfetti(); stopVoice(); });
+
+  stopVoice = setupVoice();
   startConfetti();
 }
 
@@ -639,3 +725,50 @@ setTimeout(function midnight() {
   checkCelebration();
   setTimeout(midnight, msToMidnight());
 }, msToMidnight());
+
+
+/* ---------- lively scenery ---------- */
+(function scenery() {
+  const bg = $('.bg-fixed');
+  if (!bg) return;
+  const r = (a, b) => a + Math.random() * (b - a);
+  const pick = a => a[Math.random() * a.length | 0];
+
+  // soft drifting colour clouds
+  bg.insertAdjacentHTML('afterbegin',
+    '<i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i><i class="blob b4"></i>');
+
+  // twinkling stardust (two layers that twinkle out of sync)
+  const SC = ['#ffffff', '#ffffff', '#ffd6e8', '#f6b8d6', '#e2d3fb', '#cdb9f4'];
+  const dust = () => Array.from({ length: 34 }, () =>
+    `${r(0, 100).toFixed(1)}vw ${r(0, 100).toFixed(1)}vh 0 ${r(.2, 1.3).toFixed(1)}px ${pick(SC)}`).join(',');
+  ['s1', 's2'].forEach(c =>
+    bg.insertAdjacentHTML('beforeend', `<i class="stars ${c}" style="box-shadow:${dust()}"></i>`));
+
+  // hearts, sparkles and bubbles floating upward
+  const wrap = document.createElement('div');
+  wrap.className = 'floaties';
+  const FC = ['#ffffff', '#ffffff', '#f9bcd8', '#f08bb6', '#d9c6f7', '#b79df0', '#c9a8f2'];
+  const N = innerWidth < 600 ? 16 : 26;
+
+  for (let i = 0; i < N; i++) {
+    const kind = ['h', 's', 'b', 'h', 's', 'b', 's'][i % 7],
+          size = kind === 'b' ? r(8, 30) : r(11, 25),
+          dur = r(16, 32),
+          st = `left:${r(0, 100).toFixed(1)}%; width:${size.toFixed(1)}px; height:${size.toFixed(1)}px; color:${pick(FC)};` +
+               `--dx:${r(-60, 60).toFixed(0)}px; --rot:${r(-90, 90).toFixed(0)}deg; --o:${r(.55, .95).toFixed(2)};` +
+               `animation-duration:${dur.toFixed(1)}s, ${r(2, 4).toFixed(1)}s;` +
+               `animation-delay:${(-r(0, dur)).toFixed(1)}s, ${(-r(0, 3)).toFixed(1)}s`;
+    wrap.insertAdjacentHTML('beforeend', kind === 'b'
+      ? `<span class="fl b" style="${st}"></span>`
+      : `<svg class="fl ${kind}" style="${st}"><use href="#${kind === 'h' ? 'i-heart' : 'i-spark'}"/></svg>`);
+  }
+  bg.append(wrap);
+
+  // little sparkles orbiting the days ring
+  const hero = $('.hero');
+  if (hero) hero.insertAdjacentHTML('beforeend',
+    '<div class="orbit">' + [0, 120, 240].map((a, i) =>
+      `<span class="o" style="rotate:${a}deg"><svg class="${i === 1 ? 'oh' : 'os'}"><use href="#${i === 1 ? 'i-heart' : 'i-spark'}"/></svg></span>`
+    ).join('') + '</div>');
+})();
