@@ -64,8 +64,7 @@ const PHOTOS = {
 const LETTER = {
   to: "My love, Aurish.",
   from: "Nick hehe",
-  body: [
-    body: [
+body: [
   "Hiii loveee Happy, 1st Anniversaryyy!!.",
   "thankk uu so much for all",
   "it was really tough times nga dili us magkasinabtanay, we argue lots",
